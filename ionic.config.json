@@ -1,0 +1,7 @@
+{
+  "name": "ObscureList",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
