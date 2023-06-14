@@ -11,7 +11,7 @@ import {
   IonPage,
 } from "@ionic/react";
 import { useLayoutEffect, useState } from "react";
-import { RouteComponentProps, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import queryString from "query-string";
 
 const LocationName = ({
@@ -246,12 +246,7 @@ const locationGroups = [
   },
 ];
 
-interface MapPageProps
-  extends RouteComponentProps<{
-    location?: string;
-  }> {}
-
-export const MapPage: React.FC<MapPageProps> = ({ match }) => {
+export const MapPage = () => {
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null);
   const location = useLocation();
   console.debug();
