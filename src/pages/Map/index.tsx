@@ -10,7 +10,9 @@ import {
   IonList,
   IonPage,
 } from "@ionic/react";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
+import { RouteComponentProps, useLocation } from "react-router";
+import queryString from "query-string";
 
 const LocationName = ({
   shortName,
@@ -244,10 +246,15 @@ const locationGroups = [
   },
 ];
 
-export const MapPage = () => {
-  const [highlightedPart, setHighlightedPart] = useState<string | null>(
-    "entrance"
-  );
+interface MapPageProps
+  extends RouteComponentProps<{
+    location?: string;
+  }> {}
+
+export const MapPage: React.FC<MapPageProps> = ({ match }) => {
+  const [highlightedPart, setHighlightedPart] = useState<string | null>(null);
+  const location = useLocation();
+  console.debug();
 
   const highlightPart = (part: string) => {
     if (highlightedPart === part) {
@@ -256,6 +263,23 @@ export const MapPage = () => {
     }
     setHighlightedPart(part);
   };
+
+  useLayoutEffect(() => {
+    const { location: routerLocation } = queryString.parse(location.search);
+
+    if (routerLocation) {
+      setTimeout(() => {
+        setHighlightedPart(routerLocation as string);
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        setHighlightedPart("entrance");
+      }, 1500);
+      setTimeout(() => {
+        setHighlightedPart(null);
+      }, 3500);
+    }
+  }, [location]);
 
   return (
     <IonPage>
@@ -315,7 +339,7 @@ export const MapPage = () => {
           />
           <g
             style={{
-              "--custom-color": locationGroups[2].color,
+              ["--custom-color" as string]: locationGroups[2].color,
             }}
           >
             {highlightedPart === "birria" && (
@@ -330,7 +354,7 @@ export const MapPage = () => {
           </g>
           <g
             style={{
-              "--custom-color": locationGroups[0].color,
+              ["--custom-color" as string]: locationGroups[0].color,
             }}
           >
             {highlightedPart === "entrance" && (
@@ -344,7 +368,7 @@ export const MapPage = () => {
           </g>
           <g
             style={{
-              "--custom-color": locationGroups[1].color,
+              ["--custom-color" as string]: locationGroups[1].color,
             }}
           >
             {highlightedPart === "eight" && (
@@ -406,11 +430,13 @@ export const MapPage = () => {
           </g>
           {locationGroups.map((group) => (
             <g
-              style={{ "--custom-color": group.color }}
+              key={group.name}
+              style={{ ["--custom-color" as string]: group.color }}
               className={cn(styles.mapIcon)}
             >
               {group.locations.map((location) => (
                 <LocationPin
+                  key={location.key}
                   onHighlightPart={highlightPart}
                   location={location}
                   className={cn({
@@ -435,6 +461,7 @@ export const MapPage = () => {
               </IonItemDivider>
               {group.locations.map((location) => (
                 <IonItem
+                  key={location.key}
                   className={cn(styles.item, {
                     [styles.highlightActiveItem]:
                       highlightedPart === location.key,

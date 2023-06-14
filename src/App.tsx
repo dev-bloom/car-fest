@@ -72,7 +72,7 @@ const App: React.FC = () => (
             <Home />
           </Route>
           <Route exact path="/">
-            <Redirect to="/home" />
+            <Redirect to="/map" />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
