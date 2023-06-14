@@ -1,0 +1,73 @@
+.segment {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 4em;
+  &::before {
+    display: none;
+  }
+}
+.segmentIcon {
+  margin-bottom: 0.5em;
+}
+.cardImage {
+  width: 40%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-position: center;
+  background-size: cover;
+}
+.participantCard {
+  border-left: solid 3px transparent;
+
+  &:first-child {
+    border-left: solid 3px gold;
+    .carRanking {
+      background: rgba(gold, 0.5);
+    }
+  }
+  &:nth-child(2) {
+    border-left: solid 3px silver;
+    .carRanking {
+      background: rgba(silver, 0.5);
+    }
+  }
+  &:nth-child(3) {
+    border-left: solid 3px #cd7f32;
+    .carRanking {
+      background: rgba(#cd7f32, 0.5);
+    }
+  }
+}
+.participantCardHeader {
+  flex-direction: column;
+}
+.carRanking {
+  transform: skewX(-15deg) translateX(0.5em);
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 2em;
+  font-weight: 900;
+  color: white;
+  background: rgba(black, 0.5);
+  height: 100%;
+  width: 3.5em;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 2px 2px black;
+  -webkit-backdrop-filter: saturate(180%) blur(1.5px);
+  backdrop-filter: saturate(180%) blur(1.5px);
+  box-shadow: 0 0 0.5em rgba(black, 0.5);
+}
+
+.carRakingNumber {
+  transform: skewX(15deg);
+  margin-right: 0.5em;
+}

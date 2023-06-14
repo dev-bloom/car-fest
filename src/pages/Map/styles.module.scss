@@ -1,0 +1,152 @@
+$stroke-length: 1600;
+$animation-duration: 2s;
+
+.legend {
+}
+
+.svg {
+  overflow: visible;
+  padding: 0.5em;
+  max-height: 50vh;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #222;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  width: 100%;
+}
+
+.trackPath {
+  fill: none;
+  stroke: white;
+  stroke-miterlimit: 20;
+  stroke-width: calc(1em * 0.5);
+  stroke-linecap: round;
+  stroke-dasharray: $stroke-length;
+  stroke-dashoffset: $stroke-length;
+  animation: dash $animation-duration linear forwards;
+  transition: all 0.3s ease-in-out;
+}
+
+.highlightActive {
+  stroke: gray;
+}
+
+.pinHighlightActive {
+  opacity: 0.25;
+}
+
+.highlightedPin {
+  opacity: 1;
+}
+
+.groupLabel {
+  border-bottom: solid 4px var(--custom-color);
+}
+
+.donutHighlight,
+.eightMileHighlight,
+.exhibitionHighlight,
+.slalomHighlight,
+.foodHighlight,
+.entranceHighlight {
+  $stroke-length: 70;
+  $stroke-offset: $stroke-length * 2;
+  stroke-dasharray: $stroke-length;
+  stroke-dashoffset: $stroke-offset * 2;
+  stroke: white;
+  stroke: var(--custom-color);
+  stroke-width: 8;
+  fill: none;
+  stroke-linecap: round;
+  animation: dash 3s infinite linear forwards;
+}
+
+.entranceHighlight {
+  stroke-dasharray: 0;
+  stroke-width: 8px;
+  stroke: transparent;
+  animation: pulse 0.6s infinite alternate;
+}
+
+.eightMileHighlight {
+  $stroke-length: 30;
+  $stroke-offset: $stroke-length * 2;
+  stroke-dasharray: $stroke-length;
+  stroke-dashoffset: $stroke-offset * 2;
+  stroke-width: 12px;
+}
+
+.exhibitionHighlight {
+  stroke-dasharray: 0;
+  stroke-width: 12px;
+  stroke: gray;
+  animation: pulse 0.5s infinite alternate;
+}
+
+.slalomHighlight {
+  $stroke-length: 20;
+  $stroke-offset: $stroke-length * 2;
+  stroke-dasharray: $stroke-length;
+  stroke-dashoffset: $stroke-offset * 2;
+  stroke-width: 12px;
+}
+.foodHighlight {
+  stroke-dasharray: 0;
+  stroke-dashoffset: 0;
+  stroke-width: 12px;
+  stroke: transparent;
+  animation: pulse 0.5s infinite alternate;
+}
+
+.trackPathDelay {
+  animation-delay: $animation-duration * 0.5;
+}
+
+.trackPathDelayDouble {
+  animation-delay: $animation-duration * 0.7;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.item {
+  border-right: solid 5px transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.highlightActiveItem {
+  animation: pulse 0.5s infinite alternate;
+}
+
+.itemLocationName {
+  width: 2em;
+  height: 2em;
+  font-size: 24px;
+  margin-right: 0.25em;
+  color: var(--custom-color);
+}
+
+@keyframes pulse {
+  to {
+    border-color: var(--custom-color);
+    stroke: var(--custom-color);
+  }
+}
+
+.mapIcon {
+  color: var(--custom-color);
+  transform: scale(0.25);
+  opacity: 0;
+  animation: show 0.5s forwards;
+  animation-delay: 1.5s;
+}
+
+@keyframes show {
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,50 @@
+/* stylelint-disable selector-max-specificity */
+/* stylelint-disable selector-class-pattern */
+.ant-steps,
+.ant-steps.ant-steps-with-progress {
+  .ant-steps-item,
+  .ant-steps-item-process {
+    .ant-steps-item-content {
+      border-top: dashed 3px gray;
+      .ant-steps-item-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    &.ant-steps-item-finish {
+      .ant-steps-item-container {
+        .ant-steps-item-icon {
+          background: #555;
+          border-color: lightgreen;
+          .ant-steps-icon {
+            color: lightgreen;
+          }
+        }
+        .ant-steps-item-tail {
+          background: lightgreen;
+          &::after {
+            background: lightgreen;
+          }
+        }
+      }
+    }
+    .ant-steps-item-container {
+      .ant-steps-item-icon {
+        background: lightgray;
+        border: solid 1px gray;
+
+        .ant-progress-circle-path {
+          stroke: lightgreen;
+        }
+        .ant-steps-icon {
+          color: #444;
+          font-weight: bold;
+        }
+      }
+      .ant-steps-item-tail {
+        background: lightgray;
+      }
+    }
+  }
+}

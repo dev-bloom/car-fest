@@ -1,0 +1,44 @@
+@import "../carDetails.module.scss";
+
+.swiper {
+  height: 30vh;
+}
+
+.specsGrid {
+  margin-top: 1em;
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  gap: 1rem;
+}
+.specItem {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.likeIcon {
+  color: gray;
+}
+.isLiked {
+  color: salmon;
+}
+.socialMediaContainer {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.quarterItemInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.likeButton {
+  display: flex;
+  flex-direction: column;
+}
+.likeButtonText {
+  font-size: 0.5em;
+  font-weight: bold;
+  color: gray;
+  margin-top: 0.5em;
+}

@@ -1,0 +1,58 @@
+$firstCompetitorColor: darkgreen;
+$secondCompetitorColor: blue;
+
+.voteContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 60px);
+}
+.firstCompetitor,
+.secondCompetitor {
+  flex-basis: calc(50% - 2rem);
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: 3em;
+}
+.firstCompetitor {
+  background: $firstCompetitorColor;
+}
+.secondCompetitor {
+  background: $secondCompetitorColor;
+}
+.versusLabel {
+  background: white;
+  flex-basis: 2rem * 2;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5) inset;
+  padding: 1em;
+}
+.firstCompetitorName,
+.secondCompetitorName {
+  flex-basis: calc(50% - 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: 1.5em;
+}
+.firstCompetitorName {
+  color: $firstCompetitorColor;
+}
+.secondCompetitorName {
+  color: $secondCompetitorColor;
+}
+.vs {
+  flex-basis: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: 1.5em;
+  color: black;
+}
