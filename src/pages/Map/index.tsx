@@ -10,15 +10,15 @@ import {
   IonList,
   IonPage,
 } from "@ionic/react";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router";
 import queryString from "query-string";
 import { LocationName, LocationPin, locationGroups } from "./utils";
 
 export const MapPage = () => {
+  const svgRef = useRef<any>(null);
   const [highlightedPart, setHighlightedPart] = useState<string | null>(null);
   const location = useLocation();
-  console.debug();
 
   const highlightPart = (part: string) => {
     if (highlightedPart === part) {
@@ -48,11 +48,7 @@ export const MapPage = () => {
   return (
     <IonPage>
       <IonContent>
-        <svg
-          className={styles.svg}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 168.88 332.84"
-        >
+        <svg className={styles.svg} viewBox="0 0 168.88 332.84" ref={svgRef}>
           <path
             className={cn(styles.trackPath, {
               [styles.highlightActive]: highlightedPart,
@@ -67,6 +63,13 @@ export const MapPage = () => {
             y1="66.99"
             x2="153.4"
             y2="76.58"
+          />
+          <circle
+            className={styles.trackPath}
+            cx="40"
+            cy="218"
+            r="8"
+            fill="white"
           />
           <line
             className={cn(styles.trackPath, styles.trackPathDelay, {

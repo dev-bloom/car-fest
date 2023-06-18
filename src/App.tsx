@@ -45,6 +45,7 @@ import "./_antd-overrides.scss";
 import Carlist from "./pages/CarList";
 import RegisterCar from "./pages/RegisterCar";
 import { MapPage } from "./pages/Map";
+import RegisterMedia from "./pages/RegisterMedia";
 
 setupIonicReact();
 
@@ -59,7 +60,16 @@ const App: React.FC = () => (
           <Route exact path="/participants">
             <Carlist />
           </Route>
+          <Route exact path="/register-media">
+            <RegisterMedia />
+          </Route>
+          <Route exact path="/register-media/:id">
+            <RegisterMedia />
+          </Route>
           <Route exact path="/register">
+            <RegisterCar />
+          </Route>
+          <Route exact path="/register/:id">
             <RegisterCar />
           </Route>
           <Route exact path="/schedule">

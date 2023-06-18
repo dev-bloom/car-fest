@@ -16,8 +16,8 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import styles from "./style.module.scss";
-import { mockCar } from "../../constants/mocks";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCarSide,
@@ -25,14 +25,24 @@ import {
   faSpinner,
   faTrafficLight,
 } from "@fortawesome/free-solid-svg-icons";
-const carList = [mockCar, mockCar, mockCar, mockCar, mockCar, mockCar];
+import { CarInfo } from "../../types";
 
 const Carlist = () => {
   const [activeSegment, setActiveSegment] = useState<string>("eight");
+  const [carList, setCarList] = useState<CarInfo[]>([]);
 
   const handleSegmentChange = ({ detail: { value } }: CustomEvent) => {
     setActiveSegment(value);
   };
+
+  const getCarList = async () => {
+    const { data } = await axios.get("http://localhost:3000/cars");
+    setCarList(data);
+  };
+
+  useEffect(() => {
+    getCarList();
+  }, []);
 
   return (
     <IonPage>
@@ -91,7 +101,7 @@ const Carlist = () => {
             >
               <IonCardHeader className={styles.participantCardHeader}>
                 <IonNote>
-                  {car.specs.make} {car.specs.model}
+                  {car.specs?.make} {car.specs?.model}
                 </IonNote>
                 <IonCardTitle>{car.alias}</IonCardTitle>
                 {activeSegment === "eight" && car.eightMile && (

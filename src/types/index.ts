@@ -10,29 +10,37 @@ export enum DriveType {
   FWD = "FWD",
 }
 
+export type SocialInfo = {
+  instagram: string;
+  tikTok: string;
+  youtube: string;
+};
+
+export type SpecsInfo = {
+  modelYear: number;
+  make: string;
+  model: string;
+  horsePower: number;
+  hpRPM: number;
+  torque: number;
+  torqueRPM: number;
+  zeroToSixty: number;
+  topSpeed: number;
+  displacement: number;
+  cylinders: number;
+  cylindersLayout: string;
+  transmission: string;
+  driveType: DriveType;
+  weight: number;
+  aspiration: Aspiration;
+};
+
 export type CarInfo = {
-  id: string;
+  id?: string;
   alias: string;
   gallery: string[];
-  likes: number;
-  specs: {
-    modelYear: string;
-    make: string;
-    model: string;
-    horsePower: number;
-    hpRPM: number;
-    torque: number;
-    torqueRPM: number;
-    zeroToSixty: number;
-    topSpeed: number;
-    displacement: number;
-    cylinders: number;
-    cylindersLayout: string;
-    transmission: string;
-    driveType: DriveType;
-    weight: number;
-    aspiration: Aspiration;
-  };
+  likes?: number;
+  specs?: SpecsInfo;
   exhibition?: {
     ranking: number;
     stand: string;
@@ -50,9 +58,7 @@ export type CarInfo = {
     amount: number;
     ranking: number;
   };
-  social: {
-    instagram: string;
-    tikTok: string;
-    youtube: string;
-  };
+  social?: SocialInfo;
 };
+
+export type CarInfoReferences = Pick<CarInfo, "specs" | "social">;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   IonContent,
   IonHeader,
@@ -13,12 +13,29 @@ import ModificationsCard from "../../components/CarDetails/ModificationsCard";
 import MainCard from "../../components/CarDetails/MainCard";
 import { CarInfo } from "../../types";
 import { mockCar } from "../../constants/mocks";
+import { useParams } from "react-router";
+import axios from "axios";
 
 const carInfo: CarInfo = mockCar;
 
 const CarDetails: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [carInfo, setCarInfo] = useState<CarInfo | null>(null);
   const [activeSegment, setActiveSegment] =
     useState<string>("technicalDetails");
+
+  const getCarInfo = async () => {
+    const { data } = await axios.get(`http://localhost:3000/cars/${id}`);
+    setCarInfo(data);
+  };
+
+  useEffect(() => {
+    getCarInfo();
+  }, [id]);
+
+  if (!carInfo) {
+    return <IonPage></IonPage>;
+  }
 
   return (
     <IonPage>
@@ -34,11 +51,11 @@ const CarDetails: React.FC = () => {
           carInfo={carInfo}
         />
 
-        <EightMileCard />
+        {carInfo.eightMile && <EightMileCard />}
 
-        <DonutsCard />
+        {carInfo.donuts && <DonutsCard />}
 
-        <ModificationsCard />
+        {/* <ModificationsCard /> */}
       </IonContent>
     </IonPage>
   );
