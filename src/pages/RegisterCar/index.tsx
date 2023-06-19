@@ -483,9 +483,6 @@ const RegisterCar: FC = () => {
                       : ""
                   }
                   value={car.specs?.aspiration}
-                  onIonChange={updateValue("specs.aspiration")}
-                  onIonBlur={validateField("specs", "aspiration")}
-                  errorText={errors.specs?.aspiration?.[0]}
                 >
                   <IonSelectOption>Naturalmente Aspirado</IonSelectOption>
                   <IonSelectOption>Turbocargado</IonSelectOption>

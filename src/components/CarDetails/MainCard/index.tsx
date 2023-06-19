@@ -84,8 +84,8 @@ const MainCard: FC<MainCardProps> = ({
           <div>
             <IonCardTitle>{carInfo.alias}</IonCardTitle>
             <IonCardSubtitle>
-              {carInfo.specs.modelYear} {carInfo.specs.make}{" "}
-              {carInfo.specs.model}
+              {carInfo.specs?.modelYear} {carInfo.specs?.make}{" "}
+              {carInfo.specs?.model}
             </IonCardSubtitle>
           </div>
           <IonButton size="large" fill="clear" onClick={handleFavoriteClick}>
@@ -125,82 +125,82 @@ const MainCard: FC<MainCardProps> = ({
             <div className={styles.specItem}>
               <IonLabel color="dark">Caballos De Fuerza (HP@rpm)</IonLabel>
               <IonNote>
-                {carInfo.specs.horsePower}@{carInfo.specs.hpRPM}
+                {carInfo.specs?.horsePower}@{carInfo.specs?.hpRPM}
               </IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Torque (NM@rpm)</IonLabel>
               <IonNote>
-                {carInfo.specs.torque}@{carInfo.specs.torqueRPM}
+                {carInfo.specs?.torque}@{carInfo.specs?.torqueRPM}
               </IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Cilindraje (CC)</IonLabel>
-              <IonNote>{carInfo.specs.displacement}</IonNote>
+              <IonNote>{carInfo.specs?.displacement}</IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Disposición cilindros</IonLabel>
               <IonNote>
-                {carInfo.specs.cylinders} {carInfo.specs.cylindersLayout}
+                {carInfo.specs?.cylinders} {carInfo.specs?.cylindersLayout}
               </IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Aspiración</IonLabel>
-              <IonNote>{carInfo.specs.aspiration}</IonNote>
+              <IonNote>{carInfo.specs?.aspiration}</IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Transmisión</IonLabel>
-              <IonNote>{carInfo.specs.transmission}</IonNote>
+              <IonNote>{carInfo.specs?.transmission}</IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Tracción</IonLabel>
-              <IonNote>{carInfo.specs.driveType}</IonNote>
+              <IonNote>{carInfo.specs?.driveType}</IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Peso (KG)</IonLabel>
-              <IonNote>{carInfo.specs.weight}</IonNote>
+              <IonNote>{carInfo.specs?.weight}</IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">0-100</IonLabel>
-              <IonNote>{carInfo.specs.zeroToSixty}s</IonNote>
+              <IonNote>{carInfo.specs?.zeroToSixty}s</IonNote>
             </div>
             <div className={styles.specItem}>
               <IonLabel color="dark">Velocidad Máxima</IonLabel>
-              <IonNote>{carInfo.specs.topSpeed}</IonNote>
+              <IonNote>{carInfo.specs?.topSpeed}</IonNote>
             </div>
           </div>
         )}
         {activeSegment === "social" && (
           <div className={styles.socialMediaContainer}>
-            {carInfo.social.tikTok && (
+            {carInfo.social?.tikTok && (
               <IonButton
                 className={styles.socialMediaButton}
                 shape="round"
                 color="light"
                 size="large"
-                href={`https://www.tiktok.com/${carInfo.social.tikTok}`}
+                href={`https://www.tiktok.com/${carInfo.social?.tikTok}`}
               >
                 <IonIcon slot="icon-only" icon={logoTiktok} />
               </IonButton>
             )}
-            {carInfo.social.instagram && (
+            {carInfo.social?.instagram && (
               <IonButton
                 className={styles.socialMediaButton}
                 shape="round"
                 color="light"
                 size="large"
-                href={`https://instagram.com/${carInfo.social.instagram}`}
+                href={`https://instagram.com/${carInfo.social?.instagram}`}
               >
                 <IonIcon slot="icon-only" icon={logoInstagram} />
               </IonButton>
             )}
-            {carInfo.social.youtube && (
+            {carInfo.social?.youtube && (
               <IonButton
                 className={styles.socialMediaButton}
                 shape="round"
                 color="light"
                 size="large"
-                href={`https://youtube.com/${carInfo.social.youtube}`}
+                href={`https://youtube.com/${carInfo.social?.youtube}`}
               >
                 <IonIcon slot="icon-only" icon={logoYoutube} />
               </IonButton>

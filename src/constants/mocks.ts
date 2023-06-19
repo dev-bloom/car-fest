@@ -8,7 +8,7 @@ export const mockCar: CarInfo = {
   gallery: [mockImage, mockImage, mockImage],
   likes: 12,
   specs: {
-    modelYear: "2022",
+    modelYear: 2022,
     make: "BMW",
     model: "M340i XDrive",
     horsePower: 382,
