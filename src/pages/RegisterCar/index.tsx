@@ -23,7 +23,6 @@ import {
 import { camera } from "ionicons/icons";
 import { FC, useEffect, useRef, useState } from "react";
 import { QrScanner } from "@yudiel/react-qr-scanner";
-import axios from "axios";
 import { set } from "lodash";
 import {
   Aspiration,
@@ -34,7 +33,8 @@ import {
   SpecsInfo,
 } from "../../types";
 import validate from "validate.js";
-import { useLocation, useParams } from "react-router";
+import { useParams } from "react-router";
+import { createCar, getCar, updateCar } from "../../api/cars";
 
 const carInfoSpecsConstraints: Partial<Record<keyof SpecsInfo, any>> = {
   modelYear: {
@@ -75,7 +75,7 @@ const carInfoSpecsConstraints: Partial<Record<keyof SpecsInfo, any>> = {
     },
   },
 };
-const carInfoSocialConstraints: Record<keyof SocialInfo, any> = {
+const carInfoSocialConstraints: Partial<Record<keyof SocialInfo, any>> = {
   instagram: {
     presence: {
       allowEmpty: false,
@@ -113,7 +113,6 @@ const carInfoSocialConstraints: Record<keyof SocialInfo, any> = {
     },
   },
 };
-
 const carInfoConstraints = {
   alias: {
     presence: true,
@@ -184,10 +183,10 @@ const RegisterCar: FC = () => {
 
   const handleSubmit = async () => {
     if (isEditing) {
-      await axios.put(`http://localhost:3000/cars/${id}`, car);
+      await updateCar(car);
       return;
     }
-    await axios.post("http://localhost:3000/cars", car);
+    await createCar(car);
   };
 
   const updateValue =
@@ -217,15 +216,15 @@ const RegisterCar: FC = () => {
       );
     };
 
-  const getCar = async () => {
-    const { data } = await axios.get(`http://localhost:3000/cars/${id}`);
-    setCar(data);
+  const fetchCar = async () => {
+    const car = await getCar(id);
+    setCar(car);
     setErrors({} as any);
   };
 
   useEffect(() => {
     if (id) {
-      getCar();
+      fetchCar();
     }
   }, [id]);
 
@@ -272,15 +271,15 @@ const RegisterCar: FC = () => {
             </IonItemDivider>
             <IonItem>
               <IonInput
-                className={
-                  errors.specs?.make?.[0] ? "ion-touched ion-invalid" : ""
-                }
                 labelPlacement="stacked"
                 label="* Marca"
                 placeholder="BMW"
                 value={car.specs?.make}
                 onIonInput={updateValue("specs.make")}
                 onIonBlur={validateField("specs", "make")}
+                className={
+                  errors.specs?.make?.[0] ? "ion-touched ion-invalid" : ""
+                }
                 errorText={errors.specs?.make?.[0]}
               ></IonInput>
             </IonItem>

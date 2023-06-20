@@ -16,7 +16,6 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import styles from "./style.module.scss";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -26,6 +25,7 @@ import {
   faTrafficLight,
 } from "@fortawesome/free-solid-svg-icons";
 import { CarInfo } from "../../types";
+import { getCars } from "../../api/cars";
 
 const Carlist = () => {
   const [activeSegment, setActiveSegment] = useState<string>("eight");
@@ -36,7 +36,7 @@ const Carlist = () => {
   };
 
   const getCarList = async () => {
-    const { data } = await axios.get("http://localhost:3000/cars");
+    const { data } = await getCars();
     setCarList(data);
   };
 

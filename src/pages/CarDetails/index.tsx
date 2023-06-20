@@ -12,11 +12,8 @@ import DonutsCard from "../../components/CarDetails/DonutsCard";
 import ModificationsCard from "../../components/CarDetails/ModificationsCard";
 import MainCard from "../../components/CarDetails/MainCard";
 import { CarInfo } from "../../types";
-import { mockCar } from "../../constants/mocks";
 import { useParams } from "react-router";
-import axios from "axios";
-
-const carInfo: CarInfo = mockCar;
+import { getCar } from "../../api/cars";
 
 const CarDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,8 +22,8 @@ const CarDetails: React.FC = () => {
     useState<string>("technicalDetails");
 
   const getCarInfo = async () => {
-    const { data } = await axios.get(`http://localhost:3000/cars/${id}`);
-    setCarInfo(data);
+    const car = await getCar(id);
+    setCarInfo(car);
   };
 
   useEffect(() => {
