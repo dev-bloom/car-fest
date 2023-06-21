@@ -25,7 +25,14 @@ import {
 } from "@ionic/react";
 import { IonSelectCustomEvent } from "@ionic/core";
 import { Document, Thumbnail } from "react-pdf";
-import { add, checkmark, document, lockClosed, trash } from "ionicons/icons";
+import {
+  add,
+  checkmark,
+  checkmarkDoneCircleOutline,
+  document,
+  lockClosed,
+  trash,
+} from "ionicons/icons";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import validate from "validate.js";
 import { set } from "lodash";
@@ -42,6 +49,7 @@ import { createMedia, updateMedia } from "../../api/media";
 import { fileToBase64 } from "../../utils/api";
 
 const RegisterMedia: FC = () => {
+  const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
   const windowWidth = window.innerWidth;
   const [PDFPreview, setPDFPreview] = useState<string | undefined>();
   const [representatives, setRepresentatives] = useState<Representative[]>([
@@ -75,9 +83,10 @@ const RegisterMedia: FC = () => {
     };
     if (isEditing) {
       await updateMedia(completeMedia);
-      return;
+    } else {
+      await createMedia(completeMedia);
     }
-    await createMedia(completeMedia);
+    setHasBeenSubmitted(true);
   };
 
   const updateValue =
@@ -173,6 +182,32 @@ const RegisterMedia: FC = () => {
                   color="medium"
                   size="large"
                   icon={lockClosed}
+                ></IonIcon>
+              </IonCardContent>
+            </IonCard>
+          </div>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  if (hasBeenSubmitted) {
+    return (
+      <IonPage>
+        <IonContent>
+          <div className={styles.closedRegistrationContainer}>
+            <IonCard color="dark" className={styles.closedRegistrationCard}>
+              <IonCardHeader>
+                <IonCardTitle>Inscripión Enviada</IonCardTitle>
+                <IonCardSubtitle>
+                  Pronto nos Comunicaremos con Usted
+                </IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent className={styles.closedRegistrationCardContent}>
+                <IonIcon
+                  color="success"
+                  size="large"
+                  icon={checkmarkDoneCircleOutline}
                 ></IonIcon>
               </IonCardContent>
             </IonCard>

@@ -28,3 +28,24 @@
 .PDFPreview {
   width: 100%;
 }
+
+.closedRegistrationContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-basis: 100%;
+}
+.closedRegistrationCard {
+  width: 80%;
+  text-align: center;
+}
+
+.closedRegistrationCardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 20vh;
+}
