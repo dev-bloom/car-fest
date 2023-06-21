@@ -48,7 +48,7 @@ const RegisterCar: FC = () => {
   const isEditing = !!id;
   const [errors, setErrors] = useState<Record<keyof CarInfo, any>>({} as any);
   const [car, setCar] = useState<CarInfo>(emptyCarInfo);
-  const [events, setEvents] = useState<string[]>([]);
+  const [events, setEvents] = useState<(keyof CarInfoEvents)[]>([]);
 
   const fileUploadRef = useRef<HTMLInputElement>(null);
   const [showQRScanner, setShowQRScanner] = useState(false);

@@ -7,6 +7,7 @@ export const mockCar: CarInfo = {
   alias: "Obscure",
   gallery: [mockImage, mockImage, mockImage],
   likes: 12,
+  events: ["eightMile", "donuts"],
   specs: {
     modelYear: 2022,
     make: "BMW",

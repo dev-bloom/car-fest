@@ -14,7 +14,9 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  SearchbarInputEventDetail,
 } from "@ionic/react";
+import { IonSearchbarCustomEvent } from "@ionic/core";
 import styles from "./style.module.scss";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -60,7 +62,10 @@ const Carlist = () => {
         (a[activeSegment]?.ranking ?? 0) - (b[activeSegment]?.ranking ?? 0)
     );
 
-  const handleSearch = ({ target: { value } }: CustomEvent) => {
+  const handleSearch = ({
+    target: { value },
+  }: IonSearchbarCustomEvent<SearchbarInputEventDetail>) => {
+    if (!value) return;
     setSearchText(value);
   };
 

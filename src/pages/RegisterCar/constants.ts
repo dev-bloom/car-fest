@@ -105,6 +105,7 @@ export const carInfoChildrenConstraints: Record<keyof CarInfoReferences, any> =
 export const emptyCarInfo: CarInfo = {
   alias: "",
   gallery: [],
+  events: [],
   specs: {
     modelYear: 2023,
     make: "",
