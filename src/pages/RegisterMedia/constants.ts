@@ -27,16 +27,10 @@ export const mediaInfoSpecsConstraints: Partial<Record<keyof Media, any>> = {
       message: "^El tipo es requerido",
     },
   },
-  representatives: {
-    presence: {
-      allowEmpty: false,
-      message: "^Al menos un representante es requerido",
-    },
-  },
   letter: {
     presence: {
       allowEmpty: false,
-      message: "^Al menos un representante es requerido",
+      message: "^La carta es requerida",
     },
   },
 };
@@ -49,7 +43,7 @@ export const mediaInfoSocialConstraints: Record<keyof SocialInfo, any> = {
     },
     length: {
       minimum: 2,
-      maximum: 20,
+      maximum: 30,
       tooShort: "^Instagram debe tener al menos %{count} caracteres",
       tooLong: "^Instagram debe tener menos de %{count} caracteres",
     },
@@ -57,11 +51,10 @@ export const mediaInfoSocialConstraints: Record<keyof SocialInfo, any> = {
   tikTok: {
     presence: {
       allowEmpty: true,
-      message: "^Tik Tok es requerido",
     },
     length: {
       minimum: 2,
-      maximum: 20,
+      maximum: 30,
       tooShort: "^Tik Tok debe tener al menos %{count} caracteres",
       tooLong: "^Tik Tok debe tener menos de %{count} caracteres",
     },
@@ -69,11 +62,10 @@ export const mediaInfoSocialConstraints: Record<keyof SocialInfo, any> = {
   youtube: {
     presence: {
       allowEmpty: true,
-      message: "^Youtube es requerido",
     },
     length: {
       minimum: 2,
-      maximum: 20,
+      maximum: 30,
       tooShort: "^Youtube debe tener al menos %{count} caracteres",
       tooLong: "^Youtube debe tener menos de %{count} caracteres",
     },
@@ -81,7 +73,6 @@ export const mediaInfoSocialConstraints: Record<keyof SocialInfo, any> = {
   facebook: {
     presence: {
       allowEmpty: true,
-      message: "^Facebook es requerido",
     },
     length: {
       minimum: 2,
@@ -104,15 +95,59 @@ export const mediaInfoSocialConstraints: Record<keyof SocialInfo, any> = {
   },
 };
 
+export const mediaInfoRepresentativeConstraints: Record<
+  keyof Omit<Representative, "id">,
+  any
+> = {
+  name: {
+    presence: {
+      allowEmpty: false,
+      message: "^El nombre es requerido",
+    },
+  },
+  email: {
+    presence: {
+      allowEmpty: false,
+      message: "^El email es requerido",
+    },
+    email: {
+      message: "^El email no es válido",
+    },
+  },
+  idNumber: {
+    presence: {
+      allowEmpty: false,
+      message: "^El número de identificación es requerido",
+    },
+    numericality: {
+      onlyInteger: true,
+      greaterThan: 0,
+      message: "^El número de identificación debe ser un número positivo",
+    },
+  },
+  idType: {
+    presence: {
+      allowEmpty: false,
+      message: "^El tipo de identificación es requerido",
+    },
+  },
+  role: {
+    presence: {
+      allowEmpty: false,
+      message: "^El rol es requerido",
+    },
+  },
+};
+
 export const mediaInfoConstraints: Record<keyof MediaInfoReferences, any> = {
   social: mediaInfoSocialConstraints,
-  representatives: {},
+  representatives: mediaInfoRepresentativeConstraints,
 };
 
 export const emptyMedia = {
   name: "",
   type: "",
-  representatives: [emptyRepresentative],
+  representatives: [],
   letter: "",
   social: {
     instagram: "",

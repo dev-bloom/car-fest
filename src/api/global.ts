@@ -2,11 +2,11 @@ import axios from "axios";
 
 export const API_URL =
   process.env.NODE_ENV === "prod"
-    ? "https://carfest-api.glitch.me/api"
-    : "http://localhost:3000/api";
+    ? "https://carfest-api.glitch.me"
+    : "http://localhost:3000";
 
 export const getEndpoint = (endpoint: string) => (fn?: string) =>
-  `${API_URL}/${endpoint}${fn && `/${fn}`}`;
+  `${API_URL}/${endpoint}${fn ? `/${fn}` : ""}`;
 
 export const defaultGet = async (endpoint: string) => {
   const { data } = await axios.get(endpoint);

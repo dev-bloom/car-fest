@@ -21,16 +21,12 @@ import {
   IonSelect,
   IonSelectOption,
   IonText,
+  SelectChangeEventDetail,
 } from "@ionic/react";
-import {
-  add,
-  car,
-  checkmark,
-  document,
-  lockClosed,
-  trash,
-} from "ionicons/icons";
-import { FC, useRef, useState } from "react";
+import { IonSelectCustomEvent } from "@ionic/core";
+import { Document, Thumbnail } from "react-pdf";
+import { add, checkmark, document, lockClosed, trash } from "ionicons/icons";
+import { ChangeEvent, FC, useRef, useState } from "react";
 import validate from "validate.js";
 import { set } from "lodash";
 import { useParams } from "react-router";
@@ -43,8 +39,11 @@ import {
   mediaInfoConstraints,
 } from "./constants";
 import { createMedia, updateMedia } from "../../api/media";
+import { fileToBase64 } from "../../utils/api";
 
 const RegisterMedia: FC = () => {
+  const windowWidth = window.innerWidth;
+  const [PDFPreview, setPDFPreview] = useState<string | undefined>();
   const [representatives, setRepresentatives] = useState<Representative[]>([
     { ...emptyRepresentative },
   ]);
@@ -53,25 +52,41 @@ const RegisterMedia: FC = () => {
   const { id } = useParams<{ id: string }>();
   const isEditing = !!id;
   const [errors, setErrors] = useState<Record<keyof Media, any>>({} as any);
+  const canSubmit = Object.values(errors).every((error) => !error);
 
   const fileUploadRef = useRef<HTMLInputElement>(null);
 
   const openFileDialog = () => {
     fileUploadRef.current?.click();
   };
-  const setImage = (e: any) => {};
+  const setFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+    setPDFPreview(url);
+    const base64File = await fileToBase64(file);
+    setMedia({ ...media, letter: base64File });
+  };
 
   const handleSubmit = async () => {
+    const completeMedia = {
+      ...media,
+      representatives,
+    };
     if (isEditing) {
-      await updateMedia(media);
+      await updateMedia(completeMedia);
       return;
     }
-    await createMedia(media);
+    await createMedia(completeMedia);
   };
 
   const updateValue =
     (key: string) =>
-    ({ detail: { value } }: InputCustomEvent<InputChangeEventDetail>) => {
+    ({
+      detail: { value },
+    }:
+      | InputCustomEvent<InputChangeEventDetail>
+      | IonSelectCustomEvent<SelectChangeEventDetail<any>>) => {
       setMedia(set({ ...media }, key, value));
     };
 
@@ -116,6 +131,32 @@ const RegisterMedia: FC = () => {
       )
     );
   };
+
+  const updateRepresentativeValue = (
+    value: any,
+    index: number,
+    key: keyof Representative
+  ) => {
+    setRepresentatives((currentRepresentatives) => {
+      const updatedRepresentatives = [...currentRepresentatives];
+      const representative = updatedRepresentatives[index];
+      // @ts-ignore
+      representative[key] = value;
+      return updatedRepresentatives;
+    });
+  };
+
+  const updateRepresentativeValueFromInput =
+    (index: number, key: keyof Representative) =>
+    (
+      event:
+        | InputCustomEvent<InputChangeEventDetail>
+        | IonSelectCustomEvent<SelectChangeEventDetail<any>>
+    ) => {
+      const { value } = event.detail;
+      if (!value) return;
+      updateRepresentativeValue(value, index, key);
+    };
 
   if (isAfterEdgeDate) {
     return (
@@ -237,9 +278,11 @@ const RegisterMedia: FC = () => {
                   <br />
                 </p>
               </IonText>
-              <br />
+
               <IonCheckbox onIonChange={handleCheckboxChange}>
-                Acepto términos y condiciones
+                <IonLabel color="warning">
+                  Acepto términos y condiciones
+                </IonLabel>
               </IonCheckbox>
             </IonCardContent>
           </IonCard>
@@ -261,7 +304,10 @@ const RegisterMedia: FC = () => {
                 ></IonInput>
               </IonItem>
               <IonItem>
-                <IonSelect label="* Tipo de Medio">
+                <IonSelect
+                  onIonChange={updateValue("type")}
+                  label="* Tipo de Medio"
+                >
                   <IonSelectOption value="radio">Radio</IonSelectOption>
                   <IonSelectOption value="prensa">Periódico</IonSelectOption>
                   <IonSelectOption value="tv">Televisión</IonSelectOption>
@@ -373,41 +419,33 @@ const RegisterMedia: FC = () => {
                     <IonItem>
                       <IonInput
                         value={representative.name}
-                        className={
-                          errors.representatives?.[index]?.name?.[0]
-                            ? "ion-touched ion-invalid"
-                            : ""
-                        }
                         labelPlacement="stacked"
                         label="* Nombre completo"
-                        onIonInput={updateValue(
-                          `representatives[${index}].name`
+                        onIonInput={updateRepresentativeValueFromInput(
+                          index,
+                          "name"
                         )}
-                        onIonBlur={validateField("representatives", "name")}
-                        errorText={errors.representatives?.[index]?.name?.[0]}
                       ></IonInput>
                     </IonItem>
                     <IonItem>
                       <IonInput
                         value={representative.email}
-                        className={
-                          errors.representatives?.[index]?.email?.[0]
-                            ? "ion-touched ion-invalid"
-                            : ""
-                        }
                         labelPlacement="stacked"
                         label="* Correo electrónico"
-                        onIonInput={updateValue(
-                          `representatives[${index}].email`
+                        onIonInput={updateRepresentativeValueFromInput(
+                          index,
+                          "email"
                         )}
-                        onIonBlur={validateField("representatives", "email")}
-                        errorText={errors.representatives?.[index]?.email?.[0]}
                       ></IonInput>
                     </IonItem>
                     <IonItem>
                       <IonSelect
                         value={representative.idType}
                         label="* Tipo de documento"
+                        onIonChange={updateRepresentativeValueFromInput(
+                          index,
+                          "idType"
+                        )}
                       >
                         <IonSelectOption value="cc">
                           Cédula de ciudadania
@@ -419,31 +457,25 @@ const RegisterMedia: FC = () => {
                     </IonItem>
                     <IonItem>
                       <IonInput
-                        className={
-                          errors.representatives?.idNumber?.[0]
-                            ? "ion-touched ion-invalid"
-                            : ""
-                        }
                         type="number"
                         labelPlacement="stacked"
                         label="* Número de documento"
-                        onIonInput={updateValue("representatives.idNumber")}
-                        onIonBlur={validateField("representatives", "idNumber")}
-                        errorText={errors.representatives?.idNumber?.[0]}
+                        onIonInput={updateRepresentativeValueFromInput(
+                          index,
+                          "idNumber"
+                        )}
+                        value={representative.idNumber}
                       ></IonInput>
                     </IonItem>
                     <IonItem>
                       <IonInput
                         labelPlacement="stacked"
                         label="* Cargo"
-                        className={
-                          errors.representatives?.role?.[0]
-                            ? "ion-touched ion-invalid"
-                            : ""
-                        }
-                        onIonInput={updateValue("representatives.role")}
-                        onIonBlur={validateField("representatives", "role")}
-                        errorText={errors.representatives?.role?.[0]}
+                        onIonInput={updateRepresentativeValueFromInput(
+                          index,
+                          "role"
+                        )}
+                        value={representative.role}
                       ></IonInput>
                     </IonItem>
                   </>
@@ -457,17 +489,25 @@ const RegisterMedia: FC = () => {
                 <IonIcon icon={add}></IonIcon>
                 Agregar Representante
               </IonButton>
+              <IonItemDivider>
+                <IonLabel>Carta de Solicitud de Acreditación</IonLabel>
+              </IonItemDivider>
               <input
-                multiple
                 ref={fileUploadRef}
                 type="file"
                 accept="application/pdf"
                 style={{ display: "none" }}
-                onChange={setImage}
+                onChange={setFile}
               />
-              <IonItemDivider>
-                <IonLabel>Carta de solicitud de acreditación</IonLabel>
-              </IonItemDivider>
+              {PDFPreview && (
+                <Document file={PDFPreview}>
+                  <Thumbnail
+                    width={windowWidth}
+                    className={styles.PDFPreview}
+                    pageNumber={1}
+                  />
+                </Document>
+              )}
               <IonButton
                 size="large"
                 color="dark"
@@ -476,7 +516,9 @@ const RegisterMedia: FC = () => {
                 onClick={openFileDialog}
               >
                 <IonIcon slot="start" icon={document}></IonIcon>
-                <IonLabel>* Adjuntar PDF</IonLabel>
+                <IonLabel>
+                  * {PDFPreview ? "Reemplazar" : "Adjuntar"} PDF
+                </IonLabel>
               </IonButton>
               <IonItem>
                 <IonNote>
@@ -508,6 +550,7 @@ const RegisterMedia: FC = () => {
                 fill="outline"
                 expand="block"
                 onClick={handleSubmit}
+                disabled={!canSubmit}
               >
                 <IonIcon slot="start" icon={checkmark}></IonIcon>
                 <IonLabel>Finalizar Inscripción</IonLabel>
