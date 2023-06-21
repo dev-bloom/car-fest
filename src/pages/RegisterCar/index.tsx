@@ -2,9 +2,12 @@ import {
   InputChangeEventDetail,
   InputCustomEvent,
   IonButton,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
   IonIcon,
+  IonImg,
   IonInput,
   IonItem,
   IonItemDivider,
@@ -12,6 +15,7 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonRow,
   IonSegment,
   IonSegmentButton,
   IonSelect,
@@ -19,145 +23,32 @@ import {
   IonTitle,
   IonToggle,
   IonToolbar,
+  ToggleChangeEventDetail,
 } from "@ionic/react";
+import { IonToggleCustomEvent } from "@ionic/core";
 import { camera } from "ionicons/icons";
-import { FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { QrScanner } from "@yudiel/react-qr-scanner";
 import { set } from "lodash";
-import {
-  Aspiration,
-  CarInfo,
-  CarInfoReferences,
-  DriveType,
-  SocialInfo,
-  SpecsInfo,
-} from "../../types";
+import { CarInfo, CarInfoEvents, CarInfoReferences } from "../../types";
 import validate from "validate.js";
 import { useParams } from "react-router";
 import { createCar, getCar, updateCar } from "../../api/cars";
-
-const carInfoSpecsConstraints: Partial<Record<keyof SpecsInfo, any>> = {
-  modelYear: {
-    presence: {
-      allowEmpty: false,
-      message: "^El año es requerido",
-    },
-    numericality: {
-      onlyInteger: true,
-      greaterThan: 1900,
-      lessThanOrEqualTo: new Date().getFullYear() + 1,
-      notGreaterThan: "^El año debe ser mayor a %{count}",
-      notLessThanOrEqualTo: "^El año debe ser menor o igual a %{count}",
-    },
-  },
-  make: {
-    presence: {
-      allowEmpty: false,
-      message: "^La marca es requerida",
-    },
-    length: {
-      minimum: 2,
-      maximum: 20,
-      tooShort: "^La marca debe tener al menos %{count} caracteres",
-      tooLong: "^La marca debe tener menos de %{count} caracteres",
-    },
-  },
-  model: {
-    presence: {
-      allowEmpty: false,
-      message: "^El modelo es requerida",
-    },
-    length: {
-      minimum: 2,
-      maximum: 20,
-      tooShort: "^El modelo debe tener al menos %{count} caracteres",
-      tooLong: "^El modelo debe tener menos de %{count} caracteres",
-    },
-  },
-};
-const carInfoSocialConstraints: Partial<Record<keyof SocialInfo, any>> = {
-  instagram: {
-    presence: {
-      allowEmpty: false,
-      message: "^La marca es requerida",
-    },
-    length: {
-      minimum: 2,
-      maximum: 20,
-      tooShort: "^La marca debe tener al menos %{count} caracteres",
-      tooLong: "^La marca debe tener menos de %{count} caracteres",
-    },
-  },
-  tikTok: {
-    presence: {
-      allowEmpty: true,
-      message: "^La marca es requerida",
-    },
-    length: {
-      minimum: 2,
-      maximum: 20,
-      tooShort: "^La marca debe tener al menos %{count} caracteres",
-      tooLong: "^La marca debe tener menos de %{count} caracteres",
-    },
-  },
-  youtube: {
-    presence: {
-      allowEmpty: true,
-      message: "^La marca es requerida",
-    },
-    length: {
-      minimum: 2,
-      maximum: 20,
-      tooShort: "^La marca debe tener al menos %{count} caracteres",
-      tooLong: "^La marca debe tener menos de %{count} caracteres",
-    },
-  },
-};
-const carInfoConstraints = {
-  alias: {
-    presence: true,
-  },
-  gallery: {
-    presence: true,
-  },
-};
-
-const carInfoChildrenConstraints: Record<keyof CarInfoReferences, any> = {
-  specs: carInfoSpecsConstraints,
-  social: carInfoSocialConstraints,
-};
+import {
+  carInfoChildrenConstraints,
+  carInfoConstraints,
+  emptyCarInfo,
+} from "./constants";
+import { fileToBase64 } from "../../utils/api";
 
 const RegisterCar: FC = () => {
+  const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
+  const [imagePreviewURLS, setImagePreviewURLS] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
   const isEditing = !!id;
   const [errors, setErrors] = useState<Record<keyof CarInfo, any>>({} as any);
-  const [car, setCar] = useState<CarInfo>({
-    alias: "",
-    gallery: [],
-    specs: {
-      modelYear: 2023,
-      make: "",
-      model: "",
-      horsePower: 0,
-      hpRPM: 0,
-      torque: 0,
-      torqueRPM: 0,
-      zeroToSixty: 0,
-      topSpeed: 0,
-      displacement: 0,
-      cylinders: 0,
-      cylindersLayout: "",
-      transmission: "",
-      driveType: DriveType.RWD,
-      weight: 0,
-      aspiration: Aspiration.NaturallyAspirated,
-    },
-    social: {
-      instagram: "",
-      tikTok: "",
-      youtube: "",
-    },
-  });
+  const [car, setCar] = useState<CarInfo>(emptyCarInfo);
+  const [events, setEvents] = useState<string[]>([]);
 
   const fileUploadRef = useRef<HTMLInputElement>(null);
   const [showQRScanner, setShowQRScanner] = useState(false);
@@ -170,7 +61,18 @@ const RegisterCar: FC = () => {
   const openFileDialog = () => {
     fileUploadRef.current?.click();
   };
-  const setImage = (e: any) => {};
+  const setImages = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    const { files } = e.target;
+    const previewURLs = Array.from(files).map((file) =>
+      URL.createObjectURL(file)
+    );
+    setImagePreviewURLS(previewURLs);
+    const base64Files = await Promise.all(
+      Array.from(files).map((file) => fileToBase64(file))
+    );
+    setCar({ ...car, gallery: base64Files });
+  };
 
   const handleQRError = (error: any) => {
     console.debug(error);
@@ -182,11 +84,13 @@ const RegisterCar: FC = () => {
   };
 
   const handleSubmit = async () => {
+    const carToSubmit = { ...car, events };
     if (isEditing) {
-      await updateCar(car);
-      return;
+      await updateCar(carToSubmit);
+    } else {
+      await createCar(carToSubmit);
     }
-    await createCar(car);
+    setHasBeenSubmitted(true);
   };
 
   const updateValue =
@@ -228,6 +132,36 @@ const RegisterCar: FC = () => {
     }
   }, [id]);
 
+  const handleEventChange =
+    (key: keyof CarInfoEvents) =>
+    ({
+      detail: { checked },
+    }: IonToggleCustomEvent<ToggleChangeEventDetail<any>>) => {
+      if (checked) {
+        setEvents((currentEvents) => [...currentEvents, key]);
+        return;
+      }
+      setEvents((currentEvents) =>
+        currentEvents.filter((event) => event !== key)
+      );
+    };
+
+  if (hasBeenSubmitted) {
+    return (
+      <IonPage>
+        <IonContent>
+          <IonGrid>
+            <IonRow>
+              <IonCol>
+                <IonTitle>Registro de vehículo completado</IonTitle>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -250,7 +184,7 @@ const RegisterCar: FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonList>
-          <IonButton
+          {/* <IonButton
             className="ion-margin-bottom ion-margin-top"
             color="dark"
             expand="block"
@@ -258,7 +192,7 @@ const RegisterCar: FC = () => {
           >
             <IonIcon slot="start" icon={camera}></IonIcon>
             <IonLabel>Asignar QR</IonLabel>
-          </IonButton>
+          </IonButton> */}
 
           {showQRScanner && (
             <div>
@@ -329,8 +263,22 @@ const RegisterCar: FC = () => {
               type="file"
               accept="image/*"
               style={{ display: "none" }}
-              onChange={setImage}
+              onChange={setImages}
             />
+
+            {imagePreviewURLS.length > 0 && (
+              <IonItem>
+                <IonGrid>
+                  <IonRow>
+                    {imagePreviewURLS.map((image, index) => (
+                      <IonCol key={index}>
+                        <IonImg src={image} />
+                      </IonCol>
+                    ))}
+                  </IonRow>
+                </IonGrid>
+              </IonItem>
+            )}
 
             <IonButton
               size="large"
@@ -572,22 +520,52 @@ const RegisterCar: FC = () => {
           {currentSegment === "events" && (
             <IonItemGroup>
               <IonItem>
-                <IonToggle>1/8 De Milla</IonToggle>
+                <IonToggle
+                  checked={events.includes("eightMile")}
+                  onIonChange={handleEventChange("eightMile")}
+                >
+                  1/8 De Milla
+                </IonToggle>
               </IonItem>
               <IonItem>
-                <IonToggle>Donas</IonToggle>
+                <IonToggle
+                  checked={events.includes("donuts")}
+                  onIonChange={handleEventChange("donuts")}
+                >
+                  Donas
+                </IonToggle>
               </IonItem>
               <IonItem>
-                <IonToggle>Pops & Bangs</IonToggle>
+                <IonToggle
+                  checked={events.includes("pops")}
+                  onIonChange={handleEventChange("pops")}
+                >
+                  Pops & Bangs
+                </IonToggle>
               </IonItem>
               <IonItem>
-                <IonToggle>Exhibición</IonToggle>
+                <IonToggle
+                  checked={events.includes("exhibition")}
+                  onIonChange={handleEventChange("exhibition")}
+                >
+                  Exhibición
+                </IonToggle>
               </IonItem>
               <IonItem>
-                <IonToggle>Slálom</IonToggle>
+                <IonToggle
+                  checked={events.includes("slalom")}
+                  onIonChange={handleEventChange("slalom")}
+                >
+                  Slálom
+                </IonToggle>
               </IonItem>
               <IonItem>
-                <IonToggle>Carro Mas Bajo</IonToggle>
+                <IonToggle
+                  checked={events.includes("limbo")}
+                  onIonChange={handleEventChange("limbo")}
+                >
+                  Carro Mas Bajo
+                </IonToggle>
               </IonItem>
             </IonItemGroup>
           )}

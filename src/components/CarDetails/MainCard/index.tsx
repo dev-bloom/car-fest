@@ -11,6 +11,10 @@ import {
   IonLabel,
   IonText,
   IonNote,
+  IonList,
+  IonItemGroup,
+  IonItem,
+  IonToggle,
 } from "@ionic/react";
 import cn from "classnames";
 import { heart, logoInstagram, logoTiktok, logoYoutube } from "ionicons/icons";
@@ -110,7 +114,7 @@ const MainCard: FC<MainCardProps> = ({
           <IonSegmentButton value="technicalDetails">
             <IonLabel>Datos</IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton value="stand">
+          <IonSegmentButton value="carfest">
             <IonLabel>Carfest</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="social">
@@ -169,6 +173,48 @@ const MainCard: FC<MainCardProps> = ({
               <IonNote>{carInfo.specs?.topSpeed}</IonNote>
             </div>
           </div>
+        )}
+        {activeSegment === "carfest" && (
+          <IonList className={styles.eventsContainer}>
+            <IonItemGroup>
+              <IonItem>
+                <IonToggle
+                  disabled
+                  checked={carInfo.events.includes("eightMile")}
+                >
+                  1/8 De Milla
+                </IonToggle>
+              </IonItem>
+              <IonItem>
+                <IonToggle disabled checked={carInfo.events.includes("donuts")}>
+                  Donas
+                </IonToggle>
+              </IonItem>
+              <IonItem>
+                <IonToggle disabled checked={carInfo.events.includes("pops")}>
+                  Pops & Bangs
+                </IonToggle>
+              </IonItem>
+              <IonItem>
+                <IonToggle
+                  disabled
+                  checked={carInfo.events.includes("exhibition")}
+                >
+                  Exhibición
+                </IonToggle>
+              </IonItem>
+              <IonItem>
+                <IonToggle disabled checked={carInfo.events.includes("slalom")}>
+                  Slálom
+                </IonToggle>
+              </IonItem>
+              <IonItem>
+                <IonToggle disabled checked={carInfo.events.includes("limbo")}>
+                  Carro Mas Bajo
+                </IonToggle>
+              </IonItem>
+            </IonItemGroup>
+          </IonList>
         )}
         {activeSegment === "social" && (
           <div className={styles.socialMediaContainer}>

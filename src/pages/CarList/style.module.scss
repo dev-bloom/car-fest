@@ -25,24 +25,24 @@
 .participantCard {
   border-left: solid 3px transparent;
 
-  &:first-child {
-    border-left: solid 3px gold;
-    .carRanking {
-      background: rgba(gold, 0.5);
-    }
-  }
-  &:nth-child(2) {
-    border-left: solid 3px silver;
-    .carRanking {
-      background: rgba(silver, 0.5);
-    }
-  }
-  &:nth-child(3) {
-    border-left: solid 3px #cd7f32;
-    .carRanking {
-      background: rgba(#cd7f32, 0.5);
-    }
-  }
+  // &:first-child {
+  //   border-left: solid 3px gold;
+  //   .carRanking {
+  //     background: rgba(gold, 0.5);
+  //   }
+  // }
+  // &:nth-child(2) {
+  //   border-left: solid 3px silver;
+  //   .carRanking {
+  //     background: rgba(silver, 0.5);
+  //   }
+  // }
+  // &:nth-child(3) {
+  //   border-left: solid 3px #cd7f32;
+  //   .carRanking {
+  //     background: rgba(#cd7f32, 0.5);
+  //   }
+  // }
 }
 .participantCardHeader {
   flex-direction: column;

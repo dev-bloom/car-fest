@@ -24,25 +24,45 @@ import {
   faSpinner,
   faTrafficLight,
 } from "@fortawesome/free-solid-svg-icons";
-import { CarInfo } from "../../types";
+import { CarInfo, CarInfoEvents } from "../../types";
 import { getCars } from "../../api/cars";
 
 const Carlist = () => {
-  const [activeSegment, setActiveSegment] = useState<string>("eight");
+  const [activeSegment, setActiveSegment] =
+    useState<keyof CarInfoEvents>("eightMile");
   const [carList, setCarList] = useState<CarInfo[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
 
   const handleSegmentChange = ({ detail: { value } }: CustomEvent) => {
     setActiveSegment(value);
   };
 
   const getCarList = async () => {
-    const { data } = await getCars();
+    const data = await getCars();
     setCarList(data);
   };
 
   useEffect(() => {
     getCarList();
   }, []);
+
+  const currentCarList = carList
+    .filter(
+      ({ events, alias, specs: { make, model } }) =>
+        events.includes(activeSegment) &&
+        (alias.toLowerCase().includes(searchText.toLowerCase()) ||
+          make.toLowerCase().includes(searchText.toLowerCase()) ||
+          make.toLowerCase().includes(searchText.toLowerCase()) ||
+          model.toLowerCase().includes(searchText.toLowerCase()))
+    )
+    .sort(
+      (a, b) =>
+        (a[activeSegment]?.ranking ?? 0) - (b[activeSegment]?.ranking ?? 0)
+    );
+
+  const handleSearch = ({ target: { value } }: CustomEvent) => {
+    setSearchText(value);
+  };
 
   return (
     <IonPage>
@@ -51,11 +71,14 @@ const Carlist = () => {
           <IonTitle>BlackList</IonTitle>
         </IonToolbar>
         <IonToolbar>
-          <IonSearchbar placeholder="Buscar"></IonSearchbar>
+          <IonSearchbar
+            onIonInput={handleSearch}
+            placeholder="Buscar"
+          ></IonSearchbar>
         </IonToolbar>
         <IonToolbar>
           <IonSegment value={activeSegment} onIonChange={handleSegmentChange}>
-            <IonSegmentButton className={styles.segment} value="eight">
+            <IonSegmentButton className={styles.segment} value="eightMile">
               <FontAwesomeIcon
                 className={styles.segmentIcon}
                 icon={faTrafficLight}
@@ -93,7 +116,7 @@ const Carlist = () => {
           </IonToolbar>
         </IonHeader>
         <IonList>
-          {carList.map((car, index) => (
+          {currentCarList.map((car) => (
             <IonCard
               className={styles.participantCard}
               key={car.id}
@@ -104,7 +127,7 @@ const Carlist = () => {
                   {car.specs?.make} {car.specs?.model}
                 </IonNote>
                 <IonCardTitle>{car.alias}</IonCardTitle>
-                {activeSegment === "eight" && car.eightMile && (
+                {activeSegment === "eightMile" && car.eightMile && (
                   <IonCardSubtitle>
                     Récord: {car.eightMile.time}s
                   </IonCardSubtitle>
@@ -124,11 +147,13 @@ const Carlist = () => {
                   className={styles.cardImage}
                   style={{ backgroundImage: `url(${car.gallery[0]})` }}
                 ></div>
-                <div className={styles.carRanking}>
-                  <IonText className={styles.carRakingNumber}>
-                    # {index + 1}
-                  </IonText>
-                </div>
+                {car[activeSegment]?.ranking && (
+                  <div className={styles.carRanking}>
+                    <IonText className={styles.carRakingNumber}>
+                      # {car[activeSegment]?.ranking}
+                    </IonText>
+                  </div>
+                )}
               </IonCardHeader>
             </IonCard>
           ))}

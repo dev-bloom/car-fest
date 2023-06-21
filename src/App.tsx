@@ -66,10 +66,10 @@ const App: React.FC = () => (
           <Route exact path="/register-media/:id">
             <RegisterMedia />
           </Route>
-          <Route exact path="/register">
+          <Route exact path="/register-car">
             <RegisterCar />
           </Route>
-          <Route exact path="/register/:id">
+          <Route exact path="/register-car/:id">
             <RegisterCar />
           </Route>
           <Route exact path="/schedule">

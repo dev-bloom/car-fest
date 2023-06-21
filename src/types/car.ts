@@ -39,17 +39,21 @@ export type SpecsInfo = {
   aspiration: Aspiration;
 };
 
-export type CarInfo = {
-  alias: string;
-  gallery: string[];
-  likes?: number;
-  specs?: SpecsInfo;
+export type CarInfoEvents = {
   exhibition?: {
     ranking: number;
     stand: string;
   };
   pops?: {
     ranking: number;
+  };
+  limbo?: {
+    ranking: number;
+    record: number;
+  };
+  slalom?: {
+    ranking: number;
+    record: number;
   };
   eightMile?: {
     time: number;
@@ -61,7 +65,16 @@ export type CarInfo = {
     amount: number;
     ranking: number;
   };
-  social?: SocialInfo;
-} & Entity;
+};
+
+export type CarInfo = {
+  alias: string;
+  gallery: string[];
+  likes?: number;
+  specs: SpecsInfo;
+  events: (keyof CarInfoEvents)[];
+  social: SocialInfo;
+} & Entity &
+  CarInfoEvents;
 
 export type CarInfoReferences = Pick<CarInfo, "specs" | "social">;

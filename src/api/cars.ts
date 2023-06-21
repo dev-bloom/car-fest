@@ -1,7 +1,7 @@
 import { defaultGet, defaultPost, defaultPut, getEndpoint } from "./global";
 import { CarInfo } from "../types";
 
-const parseEndpoint = getEndpoint("car");
+const parseEndpoint = getEndpoint("cars");
 
 export const getCar = async (id: string) => defaultGet(parseEndpoint(id));
 
