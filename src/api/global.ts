@@ -22,3 +22,5 @@ export const defaultPut = async <T>(endpoint: string, body: T) => {
   const { data } = await axios.put(endpoint, body);
   return data;
 };
+
+export const ping = async () => defaultGet(getEndpoint("ping")());

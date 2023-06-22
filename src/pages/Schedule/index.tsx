@@ -168,17 +168,7 @@ const Schedule = () => {
   };
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Cronograma</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Cronograma</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonCard color="light" className="ion-padding">
           <IonCardHeader>
             <IonSegment

@@ -36,7 +36,6 @@ import Schedule from "./pages/Schedule";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
-  faFireAlt,
   faListNumeric,
   faMap,
 } from "@fortawesome/free-solid-svg-icons";
@@ -46,78 +45,92 @@ import Carlist from "./pages/CarList";
 import RegisterCar from "./pages/RegisterCar";
 import { MapPage } from "./pages/Map";
 import RegisterMedia from "./pages/RegisterMedia";
+import { useEffect } from "react";
+import { ping } from "./api/global";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/car/:id">
-            <CarDetails />
-          </Route>
-          <Route exact path="/participants">
-            <Carlist />
-          </Route>
-          <Route exact path="/register-media">
-            <RegisterMedia />
-          </Route>
-          <Route exact path="/register-media/:id">
-            <RegisterMedia />
-          </Route>
-          <Route exact path="/register-car">
-            <RegisterCar />
-          </Route>
-          <Route exact path="/register-car/:id">
-            <RegisterCar />
-          </Route>
-          <Route exact path="/schedule">
-            <Schedule />
-          </Route>
-          <Route exact path="/map">
-            <MapPage />
-          </Route>
-          <Route exact path="/home">
-            <Home />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/map" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton
-            tab="schedule"
-            href="/schedule"
-            className={styles.tabButton}
-          >
-            <FontAwesomeIcon icon={faCalendarDays} className={styles.tabIcon} />
-            <IonLabel className={styles.tabLabel}>Cronograma</IonLabel>
-          </IonTabButton>
+const App: React.FC = () => {
+  useEffect(() => {
+    ping();
+  }, []);
 
-          <IonTabButton
-            tab="participants"
-            href="/participants"
-            className={styles.tabButton}
-          >
-            <FontAwesomeIcon icon={faListNumeric} className={styles.tabIcon} />
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/car/:id">
+              <CarDetails />
+            </Route>
+            <Route exact path="/participants">
+              <Carlist />
+            </Route>
+            <Route exact path="/register-media">
+              <RegisterMedia />
+            </Route>
+            <Route exact path="/register-media/:id">
+              <RegisterMedia />
+            </Route>
+            <Route exact path="/register-car">
+              <RegisterCar />
+            </Route>
+            <Route exact path="/register-car/:id">
+              <RegisterCar />
+            </Route>
+            <Route exact path="/schedule">
+              <Schedule />
+            </Route>
+            <Route exact path="/map">
+              <MapPage />
+            </Route>
+            <Route exact path="/home">
+              <Home />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/map" />
+            </Route>
+          </IonRouterOutlet>
+          <IonTabBar slot="bottom">
+            <IonTabButton
+              tab="schedule"
+              href="/schedule"
+              className={styles.tabButton}
+            >
+              <FontAwesomeIcon
+                icon={faCalendarDays}
+                className={styles.tabIcon}
+              />
+              <IonLabel className={styles.tabLabel}>Cronograma</IonLabel>
+            </IonTabButton>
 
-            <IonLabel className={styles.tabLabel}>BlackList</IonLabel>
-          </IonTabButton>
+            <IonTabButton
+              tab="participants"
+              href="/participants"
+              className={styles.tabButton}
+            >
+              <FontAwesomeIcon
+                icon={faListNumeric}
+                className={styles.tabIcon}
+              />
 
-          {/* <IonTabButton tab="home" href="/home" className={styles.tabButton}>
+              <IonLabel className={styles.tabLabel}>Participantes</IonLabel>
+            </IonTabButton>
+
+            {/* <IonTabButton tab="home" href="/home" className={styles.tabButton}>
             <FontAwesomeIcon icon={faFireAlt} className={styles.tabIcon} />
             <IonLabel className={styles.tabLabel}>Evento</IonLabel>
           </IonTabButton> */}
 
-          <IonTabButton tab="map" href="/map" className={styles.tabButton}>
-            <FontAwesomeIcon icon={faMap} className={styles.tabIcon} />
-            <IonLabel className={styles.tabLabel}>Mapa</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+            <IonTabButton tab="map" href="/map" className={styles.tabButton}>
+              <FontAwesomeIcon icon={faMap} className={styles.tabIcon} />
+              <IonLabel className={styles.tabLabel}>Mapa</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

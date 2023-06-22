@@ -73,16 +73,17 @@ const Carlist = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>BlackList</IonTitle>
-        </IonToolbar>
-        <IonToolbar>
           <IonSearchbar
             onIonInput={handleSearch}
             placeholder="Buscar"
           ></IonSearchbar>
         </IonToolbar>
         <IonToolbar>
-          <IonSegment value={activeSegment} onIonChange={handleSegmentChange}>
+          <IonSegment
+            scrollable
+            value={activeSegment}
+            onIonChange={handleSegmentChange}
+          >
             <IonSegmentButton className={styles.segment} value="eightMile">
               <FontAwesomeIcon
                 className={styles.segmentIcon}
@@ -104,6 +105,13 @@ const Carlist = () => {
               ></FontAwesomeIcon>
               Pops
             </IonSegmentButton>
+            <IonSegmentButton className={styles.segment} value="limbo">
+              <FontAwesomeIcon
+                className={styles.segmentIcon}
+                icon={faCarSide}
+              ></FontAwesomeIcon>
+              Carro mas bajo
+            </IonSegmentButton>
             <IonSegmentButton className={styles.segment} value="exhibition">
               <FontAwesomeIcon
                 className={styles.segmentIcon}
@@ -111,15 +119,17 @@ const Carlist = () => {
               ></FontAwesomeIcon>
               Exhibition
             </IonSegmentButton>
+            <IonSegmentButton className={styles.segment} value="slalom">
+              <FontAwesomeIcon
+                className={styles.segmentIcon}
+                icon={faCarSide}
+              ></FontAwesomeIcon>
+              Slalom
+            </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">BlackList</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonList>
           {currentCarList.map((car) => (
             <IonCard
@@ -146,6 +156,12 @@ const Carlist = () => {
                   <IonCardSubtitle>
                     Stand: {car.exhibition.stand}
                   </IonCardSubtitle>
+                )}
+                {activeSegment === "slalom" && car.slalom && (
+                  <IonCardSubtitle>Récord: {car.slalom.record}</IonCardSubtitle>
+                )}
+                {activeSegment === "limbo" && car.limbo && (
+                  <IonCardSubtitle>Récord: {car.limbo.record}</IonCardSubtitle>
                 )}
 
                 <div

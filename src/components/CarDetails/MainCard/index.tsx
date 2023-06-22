@@ -92,7 +92,7 @@ const MainCard: FC<MainCardProps> = ({
               {carInfo.specs?.model}
             </IonCardSubtitle>
           </div>
-          <IonButton size="large" fill="clear" onClick={handleFavoriteClick}>
+          {/* <IonButton size="large" fill="clear" onClick={handleFavoriteClick}>
             <div className={styles.likeButton}>
               <IonIcon
                 className={cn(styles.likeIcon, {
@@ -104,7 +104,7 @@ const MainCard: FC<MainCardProps> = ({
                 {carInfo.likes}
               </IonText>
             </div>
-          </IonButton>
+          </IonButton> */}
         </div>
         <IonSegment
           color="dark"

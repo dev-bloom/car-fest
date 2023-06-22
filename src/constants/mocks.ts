@@ -1,6 +1,34 @@
-import { Aspiration, CarInfo, DriveType } from "../types";
+import { Aspiration, CarInfo, CarInfoEvents, DriveType } from "../types";
 
 export const mockImage = "/mockImage.jpg";
+
+export const mockCarEvents: CarInfoEvents = {
+  exhibition: {
+    ranking: 1,
+    stand: "1",
+  },
+  pops: {
+    ranking: 1,
+  },
+  limbo: {
+    ranking: 1,
+    record: 1,
+  },
+  slalom: {
+    ranking: 1,
+    record: 1,
+  },
+  eightMile: {
+    time: 11.7,
+    speed: 200,
+    ranking: 1,
+  },
+  donuts: {
+    time: 45,
+    amount: 12,
+    ranking: 1,
+  },
+};
 
 export const mockCar: CarInfo = {
   id: "1",
@@ -26,16 +54,7 @@ export const mockCar: CarInfo = {
     weight: 1670,
     aspiration: Aspiration.Turbocharged,
   },
-  eightMile: {
-    time: 11.7,
-    speed: 200,
-    ranking: 1,
-  },
-  donuts: {
-    time: 45,
-    amount: 12,
-    ranking: 1,
-  },
+  ...mockCarEvents,
   social: {
     instagram: "obscure_m340i",
     tikTok: "obscure_m340i",
