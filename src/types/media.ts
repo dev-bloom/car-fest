@@ -9,7 +9,7 @@ export enum IdType {
 export type Representative = {
   name: string;
   email: string;
-  idNumber: number;
+  idNumber: number | null;
   idType: IdType;
   role: string;
 } & Entity;

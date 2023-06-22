@@ -9,7 +9,7 @@ import {
 export const emptyRepresentative: Representative = {
   name: "",
   email: "",
-  idNumber: 0,
+  idNumber: null,
   idType: IdType.CC,
   role: "",
 };
