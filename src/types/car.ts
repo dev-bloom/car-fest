@@ -21,56 +21,56 @@ export type SocialInfo = {
 };
 
 export type SpecsInfo = {
-  modelYear: number;
+  modelYear: number | null;
   make: string;
   model: string;
-  horsePower: number;
-  hpRPM: number;
-  torque: number;
-  torqueRPM: number;
-  zeroToSixty: number;
-  topSpeed: number;
-  displacement: number;
-  cylinders: number;
+  horsePower: number | null;
+  hpRPM: number | null;
+  torque: number | null;
+  torqueRPM: number | null;
+  zeroToSixty: number | null;
+  topSpeed: number | null;
+  displacement: number | null;
+  cylinders: number | null;
   cylindersLayout: string;
   transmission: string;
   driveType: DriveType;
-  weight: number;
+  weight: number | null;
   aspiration: Aspiration;
 };
 
 export type CarInfoEvents = {
   exhibition?: {
-    ranking: number;
+    ranking: number | null;
     stand: string;
   };
   pops?: {
-    ranking: number;
+    ranking: number | null;
   };
   limbo?: {
-    ranking: number;
-    record: number;
+    ranking: number | null;
+    record: number | null;
   };
   slalom?: {
-    ranking: number;
-    record: number;
+    ranking: number | null;
+    record: number | null;
   };
   eightMile?: {
-    time: number;
-    speed: number;
-    ranking: number;
+    time: number | null;
+    speed: number | null;
+    ranking: number | null;
   };
   donuts?: {
-    time: number;
-    amount: number;
-    ranking: number;
+    time: number | null;
+    amount: number | null;
+    ranking: number | null;
   };
 };
 
 export type CarInfo = {
   alias: string;
   gallery: string[];
-  likes?: number;
+  likes?: number | null;
   specs: SpecsInfo;
   events: (keyof CarInfoEvents)[];
   social: SocialInfo;
