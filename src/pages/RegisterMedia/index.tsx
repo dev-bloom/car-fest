@@ -68,6 +68,8 @@ const RegisterMedia: FC = () => {
   };
 
   const handleSubmit = async () => {
+    const errors = validate(media, mediaConstraints);
+    if (errors) return;
     const completeMedia = {
       ...media,
       representatives,
@@ -112,9 +114,8 @@ const RegisterMedia: FC = () => {
     (key: keyof Media, subKey?: string) =>
     ({ target: { value } }: InputCustomEvent<FocusEvent>) => {
       const parsedKey = subKey ? `${key}.${subKey}` : key;
-      console.debug(parsedKey);
+
       const updatedMedia = set({ ...media }, parsedKey, value);
-      console.debug(updatedMedia);
 
       const errors = subKey
         ? validate(
@@ -319,7 +320,7 @@ const RegisterMedia: FC = () => {
                 </IonItemDivider>
 
                 {representatives.map((representative, index) => (
-                  <>
+                  <IonItemGroup key={index}>
                     <IonItemDivider color="medium">
                       <IonLabel>Representante #{index + 1}</IonLabel>
                       {index > 0 && (
@@ -437,7 +438,7 @@ const RegisterMedia: FC = () => {
                         errorText={errors.representatives?.[index]?.role?.[0]}
                       ></IonInput>
                     </IonItem>
-                  </>
+                  </IonItemGroup>
                 ))}
               </IonItemGroup>
               <IonButton
@@ -509,7 +510,6 @@ const RegisterMedia: FC = () => {
                 fill="outline"
                 expand="block"
                 onClick={handleSubmit}
-                disabled={!canSubmit}
               >
                 <IonIcon slot="start" icon={checkmark}></IonIcon>
                 <IonLabel>Finalizar Inscripción</IonLabel>
