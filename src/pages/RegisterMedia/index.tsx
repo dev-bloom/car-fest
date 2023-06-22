@@ -2,12 +2,6 @@ import {
   InputChangeEventDetail,
   InputCustomEvent,
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCheckbox,
   IonContent,
   IonIcon,
   IonInput,
@@ -20,19 +14,11 @@ import {
   IonPage,
   IonSelect,
   IonSelectOption,
-  IonText,
   SelectChangeEventDetail,
 } from "@ionic/react";
 import { IonSelectCustomEvent } from "@ionic/core";
 import { Document, Thumbnail } from "react-pdf";
-import {
-  add,
-  checkmark,
-  checkmarkDoneCircleOutline,
-  document,
-  lockClosed,
-  trash,
-} from "ionicons/icons";
+import { add, checkmark, document, trash } from "ionicons/icons";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import validate from "validate.js";
 import { set } from "lodash";
@@ -43,12 +29,17 @@ import { Media, MediaInfoReferences, Representative } from "../../types";
 import {
   emptyMedia,
   emptyRepresentative,
+  mediaConstraints,
   mediaInfoConstraints,
 } from "./constants";
 import { createMedia, updateMedia } from "../../api/media";
 import { fileToBase64 } from "../../utils/api";
+import RegisterMediaRequirements from "./requirements";
+import ClosedRegistration from "./closed";
+import RegistrationSuccess from "./success";
 
 const RegisterMedia: FC = () => {
+  const [touched, setTouched] = useState<any>({} as any);
   const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
   const windowWidth = window.innerWidth;
   const [PDFPreview, setPDFPreview] = useState<string | undefined>();
@@ -99,24 +90,47 @@ const RegisterMedia: FC = () => {
       setMedia(set({ ...media }, key, value));
     };
 
+  const validateRepresentativeField =
+    (key: keyof Representative, index: number) =>
+    ({ target: { value } }: InputCustomEvent<FocusEvent>) => {
+      const representative = representatives[index];
+      const updatedRepresentative = set({ ...representative }, key, value);
+      const representativeErrors = validate(
+        updatedRepresentative,
+        mediaInfoConstraints.representatives
+      );
+      const newRepresentativeErrors = [...(errors.representatives ?? [])];
+      newRepresentativeErrors[index] = representativeErrors;
+      setErrors((currentErrors) => ({
+        ...currentErrors,
+        representatives: newRepresentativeErrors,
+      }));
+      setTouched(set({ ...touched }, `representatives[${index}].${key}`, true));
+    };
+
   const validateField =
     (key: keyof Media, subKey?: string) =>
     ({ target: { value } }: InputCustomEvent<FocusEvent>) => {
-      const updatedMedia = set({ ...media }, `${key}.${subKey}`, value);
+      const parsedKey = subKey ? `${key}.${subKey}` : key;
+      const updatedMedia = set({ ...media }, parsedKey, value);
+
       const errors = subKey
         ? validate(
             updatedMedia[key],
             mediaInfoConstraints[key as keyof MediaInfoReferences]
           )
-        : validate(updatedMedia, mediaInfoConstraints);
-      setErrors((currentErrors) =>
-        key
+        : validate(updatedMedia, mediaConstraints);
+      setErrors((currentErrors) => {
+        const newErrors = subKey
           ? {
               ...currentErrors,
               [key]: errors,
             }
-          : errors
-      );
+          : { ...currentErrors, ...errors };
+        return newErrors;
+      });
+      const newTouched = set({ ...touched }, parsedKey, true);
+      setTouched(newTouched);
     };
 
   const handleCheckboxChange = ({ detail: { checked } }: any) => {
@@ -168,159 +182,18 @@ const RegisterMedia: FC = () => {
     };
 
   if (isAfterEdgeDate) {
-    return (
-      <IonPage>
-        <IonContent>
-          <div className={styles.closedRegistrationContainer}>
-            <IonCard color="dark" className={styles.closedRegistrationCard}>
-              <IonCardHeader>
-                <IonCardTitle>Indscripión cerrada</IonCardTitle>
-                <IonCardSubtitle>Formulario no disponible</IonCardSubtitle>
-              </IonCardHeader>
-              <IonCardContent className={styles.closedRegistrationCardContent}>
-                <IonIcon
-                  color="medium"
-                  size="large"
-                  icon={lockClosed}
-                ></IonIcon>
-              </IonCardContent>
-            </IonCard>
-          </div>
-        </IonContent>
-      </IonPage>
-    );
+    return <ClosedRegistration />;
   }
 
   if (hasBeenSubmitted) {
-    return (
-      <IonPage>
-        <IonContent>
-          <div className={styles.closedRegistrationContainer}>
-            <IonCard color="dark" className={styles.closedRegistrationCard}>
-              <IonCardHeader>
-                <IonCardTitle>Inscripión Enviada</IonCardTitle>
-                <IonCardSubtitle>
-                  Pronto nos Comunicaremos con Usted
-                </IonCardSubtitle>
-              </IonCardHeader>
-              <IonCardContent className={styles.closedRegistrationCardContent}>
-                <IonIcon
-                  color="success"
-                  size="large"
-                  icon={checkmarkDoneCircleOutline}
-                ></IonIcon>
-              </IonCardContent>
-            </IonCard>
-          </div>
-        </IonContent>
-      </IonPage>
-    );
+    return <RegistrationSuccess />;
   }
 
   return (
     <IonPage>
       <IonContent fullscreen>
         {!showForm && (
-          <IonCard>
-            <IonCardHeader>
-              <IonText color="danger">
-                <h1 className={styles.cardTitle}>
-                  Requisitos Acreditación Prensa The Carfest 2023
-                </h1>
-              </IonText>
-            </IonCardHeader>
-            <IonCardContent>
-              <IonText className={styles.card}>
-                <p>
-                  Formulario de inscripción como medio de prensa para el The
-                  Carfest, el cual se llevará a cabo en el Municipio de Sabaneta
-                  - Antioquia, los días 2 y 3 de julio de 2023.
-                  <br />
-                  <br />
-                  <p>
-                    Los medios de comunicación interesados en realizar este
-                    proceso de acreditación para hacer un cubrimiento
-                    periodístico deben tener en cuenta los siguientes requisitos
-                    para acceder a las acreditaciones:
-                  </p>
-                </p>
-                <p>
-                  <ol>
-                    <li>Nombre del medio a inscribir.</li>
-                    <li>
-                      Link de la página del medio (Facebook, Instagram, página
-                      web, etc.)
-                    </li>
-                    <li>
-                      Máximo personas por medio 3 (presentador, camarógrafo y
-                      redactor)
-                    </li>
-                    <li>Las personas deben ser mayor de edad.</li>
-                    <li>Datos personales de o las personas inscritas.</li>
-                    <li>
-                      Carta donde se certifique existencia del medio y sus
-                      integrantes.
-                    </li>
-                    <li>
-                      El medio debe tener un mínimo de 2 años de creación.
-                    </li>
-                    <li>
-                      Cada persona acreditada debe llevar su propio chaleco
-                      reflectivo para ser fácilmente identificado, The Carfest
-                      solo otorgará la escarapela a cada persona del medio
-                      (Nombre de la persona, nombre del medio y número de
-                      identificación).
-                    </li>
-                  </ol>
-                  <IonCard color="warning">
-                    <IonCardContent>
-                      <b>IMPORTANTE:</b> <br />{" "}
-                      <i>
-                        La escarapela de identificación es de uso personal e
-                        intransferible, cualquier miembro organizador del The
-                        Carfest puede corroborar la información, pidiendo
-                        identificación (cedula de ciudadanía). En el caso de no
-                        ser la persona identificada con los datos de la
-                        escarapela, se procederá a retirar la escarapela y
-                        retirar a todo el equipo del medio de prensa del evento.
-                      </i>
-                    </IonCardContent>
-                  </IonCard>
-                  <p>
-                    Por favor, leer todos los requisitos y tener lista la
-                    documentación que se solicita en el formulario antes de
-                    empezar a llenarlo.
-                  </p>
-                  <br />
-                  <p>
-                    Además, es importante tener en cuenta que el proceso de
-                    acreditación es por cada medio de comunicación. Solo se
-                    tendrá en cuenta un formulario por cada medio de
-                    comunicación. Los datos de las personas que se acreditarán
-                    deben estar en la carta y, si se envían más nombres de los
-                    permitidos por tipo de medio, solamente se acreditarán las
-                    primeras personas del listado. <br />{" "}
-                    <b>NO HABRÁ EXCEPCIONES.</b>
-                  </p>
-                  <br />
-                  <p>
-                    El equipo de prensa de The CarFest, evaluará la información
-                    y soportes enviados en el formulario, confirmando antes del
-                    evento a los medios acreditados por correo electrónico. Si
-                    no se recibe el correo, quiere decir que el medio no fue
-                    acreditado.
-                  </p>
-                  <br />
-                </p>
-              </IonText>
-
-              <IonCheckbox onIonChange={handleCheckboxChange}>
-                <IonLabel color="warning">
-                  Acepto términos y condiciones
-                </IonLabel>
-              </IonCheckbox>
-            </IonCardContent>
-          </IonCard>
+          <RegisterMediaRequirements onCheckboxChange={handleCheckboxChange} />
         )}
         {showForm && (
           <IonList>
@@ -330,7 +203,11 @@ const RegisterMedia: FC = () => {
               </IonItemDivider>
               <IonItem>
                 <IonInput
-                  className={errors.name?.[0] ? "ion-touched ion-invalid" : ""}
+                  className={
+                    errors.name?.[0] && touched.name
+                      ? "ion-touched ion-invalid"
+                      : ""
+                  }
                   labelPlacement="stacked"
                   label="* Nombre del medio"
                   onIonInput={updateValue("name")}
@@ -365,7 +242,7 @@ const RegisterMedia: FC = () => {
                     labelPlacement="stacked"
                     label="* Instagram"
                     className={
-                      errors.social?.instagram?.[0]
+                      errors.social?.instagram?.[0] && touched.social.instagram
                         ? "ion-touched ion-invalid"
                         : ""
                     }
@@ -379,7 +256,7 @@ const RegisterMedia: FC = () => {
                     labelPlacement="stacked"
                     label="Facebook"
                     className={
-                      errors.social?.facebook?.[0]
+                      errors.social?.facebook?.[0] && touched.social.facebook
                         ? "ion-touched ion-invalid"
                         : ""
                     }
@@ -394,7 +271,7 @@ const RegisterMedia: FC = () => {
                     labelPlacement="stacked"
                     label="Página web"
                     className={
-                      errors.social?.webpage?.[0]
+                      errors.social?.webpage?.[0] && touched.social.webpage
                         ? "ion-touched ion-invalid"
                         : ""
                     }
@@ -408,7 +285,7 @@ const RegisterMedia: FC = () => {
                     labelPlacement="stacked"
                     label="TikTok"
                     className={
-                      errors.social?.tikTok?.[0]
+                      errors.social?.tikTok?.[0] && touched.social.tikTok
                         ? "ion-touched ion-invalid"
                         : ""
                     }
@@ -422,7 +299,7 @@ const RegisterMedia: FC = () => {
                     labelPlacement="stacked"
                     label="Youtube"
                     className={
-                      errors.social?.youtube?.[0]
+                      errors.social?.youtube?.[0] && touched.social?.youtube
                         ? "ion-touched ion-invalid"
                         : ""
                     }
@@ -456,10 +333,18 @@ const RegisterMedia: FC = () => {
                         value={representative.name}
                         labelPlacement="stacked"
                         label="* Nombre completo"
+                        className={
+                          errors.representatives?.[index]?.name?.[0] &&
+                          touched.representatives?.[index]?.name
+                            ? "ion-touched ion-invalid"
+                            : ""
+                        }
                         onIonInput={updateRepresentativeValueFromInput(
                           index,
                           "name"
                         )}
+                        onIonBlur={validateRepresentativeField("name", index)}
+                        errorText={errors.representatives?.[index]?.name?.[0]}
                       ></IonInput>
                     </IonItem>
                     <IonItem>
@@ -467,16 +352,30 @@ const RegisterMedia: FC = () => {
                         value={representative.email}
                         labelPlacement="stacked"
                         label="* Correo electrónico"
+                        className={
+                          errors.representatives?.[index]?.email?.[0] &&
+                          touched.representatives?.[index]?.email
+                            ? "ion-touched ion-invalid"
+                            : ""
+                        }
                         onIonInput={updateRepresentativeValueFromInput(
                           index,
                           "email"
                         )}
+                        onIonBlur={validateRepresentativeField("email", index)}
+                        errorText={errors.representatives?.[index]?.email?.[0]}
                       ></IonInput>
                     </IonItem>
                     <IonItem>
                       <IonSelect
                         value={representative.idType}
                         label="* Tipo de documento"
+                        className={
+                          errors.representatives?.[index]?.idType?.[0] &&
+                          touched.representatives?.[index]?.idType
+                            ? "ion-touched ion-invalid"
+                            : ""
+                        }
                         onIonChange={updateRepresentativeValueFromInput(
                           index,
                           "idType"
@@ -495,22 +394,43 @@ const RegisterMedia: FC = () => {
                         type="number"
                         labelPlacement="stacked"
                         label="* Número de documento"
+                        value={representative.idNumber}
+                        className={
+                          errors.representatives?.[index]?.idNumber?.[0] &&
+                          touched.representatives?.[index]?.idNumber
+                            ? "ion-touched ion-invalid"
+                            : ""
+                        }
                         onIonInput={updateRepresentativeValueFromInput(
                           index,
                           "idNumber"
                         )}
-                        value={representative.idNumber}
+                        onIonBlur={validateRepresentativeField(
+                          "idNumber",
+                          index
+                        )}
+                        errorText={
+                          errors.representatives?.[index]?.idNumber?.[0]
+                        }
                       ></IonInput>
                     </IonItem>
                     <IonItem>
                       <IonInput
                         labelPlacement="stacked"
                         label="* Cargo"
+                        value={representative.role}
+                        className={
+                          errors.representatives?.[index]?.role?.[0] &&
+                          touched.representatives?.[index]?.role
+                            ? "ion-touched ion-invalid"
+                            : ""
+                        }
                         onIonInput={updateRepresentativeValueFromInput(
                           index,
                           "role"
                         )}
-                        value={representative.role}
+                        onIonBlur={validateRepresentativeField("role", index)}
+                        errorText={errors.representatives?.[index]?.role?.[0]}
                       ></IonInput>
                     </IonItem>
                   </>
