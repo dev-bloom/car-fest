@@ -21,7 +21,7 @@ import { Document, Thumbnail } from "react-pdf";
 import { add, checkmark, document, trash } from "ionicons/icons";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import validate from "validate.js";
-import { set } from "lodash";
+import { get, set } from "lodash";
 import { useParams } from "react-router";
 import styles from "./style.module.scss";
 import { isAfter, parse } from "date-fns";
@@ -112,7 +112,9 @@ const RegisterMedia: FC = () => {
     (key: keyof Media, subKey?: string) =>
     ({ target: { value } }: InputCustomEvent<FocusEvent>) => {
       const parsedKey = subKey ? `${key}.${subKey}` : key;
+      console.debug(parsedKey);
       const updatedMedia = set({ ...media }, parsedKey, value);
+      console.debug(updatedMedia);
 
       const errors = subKey
         ? validate(
@@ -127,6 +129,8 @@ const RegisterMedia: FC = () => {
               [key]: errors,
             }
           : { ...currentErrors, ...errors };
+        if (get(newErrors, parsedKey) && !get(errors, parsedKey))
+          delete newErrors[parsedKey];
         return newErrors;
       });
       const newTouched = set({ ...touched }, parsedKey, true);
