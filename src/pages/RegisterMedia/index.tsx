@@ -17,13 +17,13 @@ import {
   SelectChangeEventDetail,
 } from "@ionic/react";
 import { IonSelectCustomEvent } from "@ionic/core";
-import { Document, Thumbnail } from "react-pdf";
+// import { Document, Thumbnail } from "react-pdf";
 import { add, checkmark, document, trash } from "ionicons/icons";
 import { ChangeEvent, FC, useRef, useState } from "react";
 import validate from "validate.js";
 import { get, set } from "lodash";
 import { useParams } from "react-router";
-import styles from "./style.module.scss";
+// import styles from "./style.module.scss";
 import { isAfter, parse } from "date-fns";
 import { Media, MediaInfoReferences, Representative } from "../../types";
 import {
@@ -41,8 +41,8 @@ import RegistrationSuccess from "./success";
 const RegisterMedia: FC = () => {
   const [touched, setTouched] = useState<any>({} as any);
   const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
-  const windowWidth = window.innerWidth;
-  const [PDFPreview, setPDFPreview] = useState<string | undefined>();
+  // const windowWidth = window.innerWidth;
+  // const [PDFPreview, setPDFPreview] = useState<string | undefined>();
   const [representatives, setRepresentatives] = useState<Representative[]>([
     { ...emptyRepresentative },
   ]);
@@ -53,19 +53,19 @@ const RegisterMedia: FC = () => {
   const [errors, setErrors] = useState<Record<keyof Media, any>>({} as any);
   const canSubmit = Object.values(errors).every((error) => !error);
 
-  const fileUploadRef = useRef<HTMLInputElement>(null);
+  // const fileUploadRef = useRef<HTMLInputElement>(null);
 
-  const openFileDialog = () => {
-    fileUploadRef.current?.click();
-  };
-  const setFile = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-    const file = e.target.files[0];
-    const url = URL.createObjectURL(file);
-    setPDFPreview(url);
-    const base64File = await fileToBase64(file);
-    setMedia({ ...media, letter: base64File });
-  };
+  // const openFileDialog = () => {
+  //   fileUploadRef.current?.click();
+  // };
+  // const setFile = async (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (!e.target.files?.length) return;
+  //   const file = e.target.files[0];
+  //   const url = URL.createObjectURL(file);
+  //   setPDFPreview(url);
+  //   const base64File = await fileToBase64(file);
+  //   setMedia({ ...media, letter: base64File });
+  // };
 
   const handleSubmit = async () => {
     const errors = validate(media, mediaConstraints);
@@ -144,7 +144,7 @@ const RegisterMedia: FC = () => {
 
   const isAfterEdgeDate = isAfter(
     new Date(),
-    parse("26-06-2023 00:00", "dd-MM-yyyy H:mm", new Date())
+    parse("01-07-2023 00:00", "dd-MM-yyyy H:mm", new Date())
   );
 
   const addRepresentative = () => {
@@ -449,7 +449,7 @@ const RegisterMedia: FC = () => {
                 <IonIcon icon={add}></IonIcon>
                 Agregar Representante
               </IonButton>
-              <IonItemDivider>
+              {/* <IonItemDivider>
                 <IonLabel>Carta de Solicitud de Acreditación</IonLabel>
               </IonItemDivider>
               <input
@@ -479,8 +479,8 @@ const RegisterMedia: FC = () => {
                 <IonLabel>
                   * {PDFPreview ? "Reemplazar" : "Adjuntar"} PDF
                 </IonLabel>
-              </IonButton>
-              <IonItem>
+              </IonButton> */}
+              {/* <IonItem>
                 <IonNote>
                   Por favor, asegúrate de que tu carta incluya:
                   <ul>
@@ -501,7 +501,7 @@ const RegisterMedia: FC = () => {
                   </ul>
                   Cada detalle es esencial para la validez de tu carta.
                 </IonNote>
-              </IonItem>
+              </IonItem> */}
 
               <IonButton
                 size="large"
