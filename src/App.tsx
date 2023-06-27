@@ -49,6 +49,9 @@ import { useEffect } from "react";
 import { ping } from "./api/global";
 import MediaListPage from "./pages/MediaList";
 import MediaDetailsPage from "./pages/MediaDetails";
+import RegisterPeople from "./pages/RegisterPeople";
+import PeopleListPage from "./pages/PeopleList";
+import CustomerDetailsPage from "./pages/CustomerDetails";
 
 setupIonicReact();
 
@@ -67,6 +70,15 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/participants">
               <Carlist />
+            </Route>
+            <Route exact path="/customer-list">
+              <PeopleListPage />
+            </Route>
+            <Route exact path="/customer-list/:id">
+              <CustomerDetailsPage />
+            </Route>
+            <Route exact path="/register-customer">
+              <RegisterPeople />
             </Route>
             <Route exact path="/register-media">
               <RegisterMedia />
