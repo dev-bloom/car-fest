@@ -15,10 +15,14 @@ import {
   IonItemGroup,
   IonList,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonRow,
   IonTitle,
   IonToolbar,
+  RefresherEventDetail,
 } from "@ionic/react";
+import type { IonRefresherCustomEvent } from "@ionic/core";
 import { useEffect, useState } from "react";
 import { Media } from "../../types";
 import { getMedia } from "../../api/media";
@@ -29,9 +33,12 @@ const MediaDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const [media, setMedia] = useState<Media | null>(null);
 
-  const loadMedia = async () => {
+  const loadMedia = async (
+    e?: IonRefresherCustomEvent<RefresherEventDetail>
+  ) => {
     const media = await getMedia(id);
     setMedia(media);
+    e?.detail?.complete();
   };
 
   useEffect(() => {
@@ -52,6 +59,9 @@ const MediaDetailsPage = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={loadMedia}>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Prensa</IonTitle>
