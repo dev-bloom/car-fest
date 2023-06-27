@@ -54,7 +54,7 @@ const PeopleListPage = () => {
         </IonHeader>
         <IonList>
           <IonItemDivider>
-            {customerList.length} registros de prensa
+            {customerList.length} registros de clientes
           </IonItemDivider>
           {customerList.map((customer) => (
             <IonItem
