@@ -47,6 +47,8 @@ import { MapPage } from "./pages/Map";
 import RegisterMedia from "./pages/RegisterMedia";
 import { useEffect } from "react";
 import { ping } from "./api/global";
+import MediaListPage from "./pages/MediaList";
+import MediaDetailsPage from "./pages/MediaDetails";
 
 setupIonicReact();
 
@@ -68,6 +70,12 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/register-media">
               <RegisterMedia />
+            </Route>
+            <Route exact path="/media-list">
+              <MediaListPage />
+            </Route>
+            <Route exact path="/media-list/:id">
+              <MediaDetailsPage />
             </Route>
             <Route exact path="/register-media/:id">
               <RegisterMedia />
