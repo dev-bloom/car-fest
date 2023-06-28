@@ -46,10 +46,6 @@ const firstDaySchedule: ScheduleItem[] = [
   },
   {
     time: "9:00 am",
-    title: "Himno cantado (Apertura del evento)",
-  },
-  {
-    time: "9:15 am",
     title: "Prácticas ⅛ de milla",
     place: "eight",
   },
@@ -59,12 +55,7 @@ const firstDaySchedule: ScheduleItem[] = [
   },
   {
     time: "12:00 am",
-    title: "Exhibición slalom prácticas (pilotos expertos)",
-    place: "slalom",
-  },
-  {
-    time: "1:00 pm",
-    title: "Exhibición  (pilotos expertos)",
+    title: "Exhibición slalom (pilotos expertos)",
     place: "slalom",
   },
   {
@@ -85,7 +76,7 @@ const firstDaySchedule: ScheduleItem[] = [
 const secondDaySchedule: ScheduleItem[] = [
   {
     time: "6:00 am",
-    title: "Ingreso de pilotos permitido y organización pregrilla",
+    title: "Ingreso de pilotos y organización pregrilla",
     place: "entrance",
   },
   {
@@ -100,30 +91,30 @@ const secondDaySchedule: ScheduleItem[] = [
   },
   {
     time: "10:30 am",
-    title: "Carro mas bajo",
+    title: "Carro más bajo",
     place: "eight",
   },
   {
     time: "11:00 am",
-    title: "Exhibición (pilotos expertos)",
-    place: "slalom",
-  },
-  {
-    time: "11:30 am",
     title: "Movimiento cultural (artistas)",
   },
   {
-    time: "12:00 pm",
-    title: "Movimiento de marcas y cultural",
+    time: "11:30 am",
+    title: "Concurso de Donas (pilotos expertos)",
+    place: "donuts",
   },
   {
-    time: "1:10 pm",
-    title: "Slalom tiempo final",
-    place: "slalom",
+    time: "12:30 pm",
+    title: "Exhibición de marcas y movimiento cultural",
   },
   {
     time: "1:30 pm",
     title: "Finales",
+    place: "eight",
+  },
+  {
+    time: "2:30 pm",
+    title: "Competencia de frenado",
     place: "eight",
   },
   {
@@ -133,6 +124,10 @@ const secondDaySchedule: ScheduleItem[] = [
   },
   {
     time: "4:00 pm",
+    title: "Exhibición Marca",
+  },
+  {
+    time: "5:00 pm",
     title: "Premiacion y cierre (DJ)",
   },
 ];

@@ -106,21 +106,6 @@ export const MapPage = () => {
           />
           <g
             style={{
-              ["--custom-color" as string]: locationGroups[2].color,
-            }}
-          >
-            {highlightedPart === "birria" && (
-              <line
-                className={styles.foodHighlight}
-                x1="51"
-                x2="135"
-                y1="158"
-                y2="163"
-              />
-            )}
-          </g>
-          <g
-            style={{
               ["--custom-color" as string]: locationGroups[0].color,
             }}
           >
@@ -130,6 +115,15 @@ export const MapPage = () => {
                 cx="90"
                 cy="320"
                 r="12"
+              />
+            )}
+            {highlightedPart === "comida" && (
+              <line
+                className={styles.foodHighlight}
+                x1="41"
+                y1="218"
+                x2="145"
+                y2="224.38"
               />
             )}
           </g>
@@ -168,22 +162,23 @@ export const MapPage = () => {
             )}
 
             {highlightedPart === "exhibition" && (
-              <g>
-                <line
-                  className={styles.exhibitionHighlight}
-                  x1="41"
-                  y1="218"
-                  x2="145"
-                  y2="224.38"
-                />
-                <line
-                  className={styles.exhibitionHighlight}
-                  x1="89"
-                  y1="318"
-                  x2="95"
-                  y2="221.31"
-                />
-              </g>
+              <line
+                className={styles.exhibitionHighlight}
+                x1="89"
+                y1="318"
+                x2="95"
+                y2="221.31"
+              />
+            )}
+
+            {highlightedPart === "exhibition" && (
+              <line
+                className={styles.exhibitionHighlight}
+                x1="51"
+                x2="135"
+                y1="158"
+                y2="163"
+              />
             )}
 
             {highlightedPart === "pops" && (

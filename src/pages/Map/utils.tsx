@@ -144,6 +144,16 @@ const interestLocations: LocationWithPosition[] = [
       labelAlignment: AlignmentModes.TOP_RIGHT,
     },
   },
+  {
+    name: "Comida",
+    shortName: "C",
+    key: "comida",
+    position: {
+      x: 380,
+      y: 900,
+      labelAlignment: AlignmentModes.TOP,
+    },
+  },
 ].map(mapLocationPositions);
 
 const eventLocations: LocationWithPosition[] = [
@@ -181,9 +191,20 @@ const eventLocations: LocationWithPosition[] = [
 
     key: "exhibition",
     position: {
-      x: 380,
-      y: 900,
+      x: 350,
+      y: 644,
       labelAlignment: AlignmentModes.TOP,
+    },
+  },
+  {
+    name: "Exhibición",
+    shortName: "E",
+
+    key: "exhibition",
+    position: {
+      x: 380,
+      y: 1050,
+      labelAlignment: AlignmentModes.TOP_RIGHT,
     },
   },
   {
@@ -199,19 +220,6 @@ const eventLocations: LocationWithPosition[] = [
   },
 ].map(mapLocationPositions);
 
-const foodLocations: LocationWithPosition[] = [
-  {
-    name: "Birria",
-    shortName: "B",
-    key: "birria",
-    position: {
-      x: 380,
-      y: 644,
-      labelAlignment: AlignmentModes.TOP,
-    },
-  },
-].map(mapLocationPositions);
-
 export const locationGroups = [
   {
     name: "General",
@@ -222,10 +230,5 @@ export const locationGroups = [
     name: "Eventos",
     locations: eventLocations,
     color: "#FFA500",
-  },
-  {
-    name: "Comida",
-    locations: foodLocations,
-    color: "#32CD32",
   },
 ];
