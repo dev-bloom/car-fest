@@ -36,11 +36,6 @@ const CarDetails: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Carfest</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
         <MainCard
           activeSegment={activeSegment}
@@ -48,9 +43,9 @@ const CarDetails: React.FC = () => {
           carInfo={carInfo}
         />
 
-        {carInfo.eightMile && <EightMileCard />}
+        {/* {carInfo.eightMile && <EightMileCard />} */}
 
-        {carInfo.donuts && <DonutsCard />}
+        {/* {carInfo.donuts && <DonutsCard />} */}
 
         {/* <ModificationsCard /> */}
       </IonContent>
