@@ -1,0 +1,105 @@
+.boxGradient {
+  display: flex;
+  height: 300px;
+  margin: 0 10px;
+  position: relative;
+  width: 300px;
+  z-index: 0;
+  overflow: hidden;
+  fill: url(#gradient);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+.svg {
+  width: 70%;
+  overflow: visible;
+}
+.d {
+  letter-spacing: 0.05em;
+}
+.e {
+  font-size: 53px;
+  letter-spacing: 0.06em;
+  stroke: #6a6360;
+}
+.e,
+.f,
+.g,
+.h {
+  fill: #fff;
+}
+.e,
+.i,
+.j,
+.g,
+.h {
+  stroke-miterlimit: 10;
+}
+.e,
+.k,
+.g,
+.h {
+  font-family: SPEEDFEZitalic, "SPEED FEZ italic";
+}
+.e,
+.j {
+  stroke-width: 4px;
+}
+.i {
+  fill: #e9c643;
+  stroke: #bfa43a;
+  stroke-width: 2.03px;
+}
+.o {
+  letter-spacing: 0.02em;
+}
+.k {
+  font-size: 35px;
+}
+.p {
+  letter-spacing: 0.06em;
+}
+.q {
+  letter-spacing: 0.06em;
+}
+.j {
+  stroke: var(--banner-color);
+}
+.r {
+  letter-spacing: -0.05em;
+}
+.s {
+  font-size: 11.46px;
+  letter-spacing: 0.01em;
+}
+.g {
+  font-size: 27px;
+}
+.g,
+.h {
+  stroke: #221f20;
+}
+.t {
+  font-size: 18.63px;
+  letter-spacing: 0.03em;
+}
+.h {
+  opacity: 0.88;
+  stroke-width: 0.58px;
+}
+.yearLabel {
+  font-size: 26px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  stroke: var(--banner-highlight);
+  fill: black;
+  stroke-width: 1;
+  font-weight: 100;
+}

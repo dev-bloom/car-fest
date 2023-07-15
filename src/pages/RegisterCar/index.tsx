@@ -20,6 +20,7 @@ import {
   IonSegmentButton,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
   IonTitle,
   IonToggle,
   IonToolbar,
@@ -32,7 +33,7 @@ import { QrScanner } from "@yudiel/react-qr-scanner";
 import { set } from "lodash";
 import { CarInfo, CarInfoEvents, CarInfoReferences } from "../../types";
 import validate from "validate.js";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { createCar, getCar, updateCar } from "../../api/cars";
 import {
   carInfoChildrenConstraints,
@@ -40,8 +41,11 @@ import {
   emptyCarInfo,
 } from "./constants";
 import { fileToBase64 } from "../../utils/api";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const RegisterCar: FC = () => {
+  const history = useHistory();
   const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
   const [imagePreviewURLS, setImagePreviewURLS] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
@@ -53,6 +57,8 @@ const RegisterCar: FC = () => {
   const fileUploadRef = useRef<HTMLInputElement>(null);
   const [showQRScanner, setShowQRScanner] = useState(false);
   const [currentSegment, setCurrentSegment] = useState("technicalData");
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSegmentChange = (e: CustomEvent) => {
     setCurrentSegment(e.detail.value);
@@ -88,7 +94,7 @@ const RegisterCar: FC = () => {
     if (isEditing) {
       await updateCar(carToSubmit);
     } else {
-      await createCar(carToSubmit);
+      await createCar({ ...carToSubmit, uid: user.uid });
     }
     setHasBeenSubmitted(true);
   };
@@ -132,6 +138,21 @@ const RegisterCar: FC = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (!currentUser) {
+        history.push("/profile");
+        return;
+      }
+      setUser(currentUser);
+      setIsLoading(false);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const handleEventChange =
     (key: keyof CarInfoEvents) =>
     ({
@@ -145,6 +166,16 @@ const RegisterCar: FC = () => {
         currentEvents.filter((event) => event !== key)
       );
     };
+
+  if (isLoading) {
+    return (
+      <IonPage>
+        <IonGrid className="ion-margin-top ion-padding-top">
+          <IonSpinner name="circular" />
+        </IonGrid>
+      </IonPage>
+    );
+  }
 
   if (hasBeenSubmitted) {
     return (
@@ -203,6 +234,14 @@ const RegisterCar: FC = () => {
             <IonItemDivider>
               <IonLabel>Datos básicos</IonLabel>
             </IonItemDivider>
+            <IonItem>
+              <IonInput
+                disabled
+                labelPlacement="stacked"
+                label="* Correo electrónico"
+                value={user.email}
+              ></IonInput>
+            </IonItem>
             <IonItem>
               <IonInput
                 labelPlacement="stacked"

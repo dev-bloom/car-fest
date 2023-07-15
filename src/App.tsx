@@ -38,6 +38,7 @@ import {
   faCalendarDays,
   faListNumeric,
   faMap,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./App.module.scss";
 import "./_antd-overrides.scss";
@@ -52,6 +53,8 @@ import MediaDetailsPage from "./pages/MediaDetails";
 import RegisterPeople from "./pages/RegisterPeople";
 import PeopleListPage from "./pages/PeopleList";
 import CustomerDetailsPage from "./pages/CustomerDetails";
+import BadgePage from "./pages/BadgePage";
+import Profile from "./pages/Profile";
 
 setupIonicReact();
 
@@ -65,6 +68,12 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
+            <Route exact path="/profile">
+              <Profile />
+            </Route>
+            <Route exact path="/badge">
+              <BadgePage />
+            </Route>
             <Route exact path="/car/:id">
               <CarDetails />
             </Route>
@@ -112,7 +121,7 @@ const App: React.FC = () => {
             </Route>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-            <IonTabButton
+            {/* <IonTabButton
               tab="schedule"
               href="/schedule"
               className={styles.tabButton}
@@ -122,7 +131,7 @@ const App: React.FC = () => {
                 className={styles.tabIcon}
               />
               <IonLabel className={styles.tabLabel}>Cronograma</IonLabel>
-            </IonTabButton>
+            </IonTabButton> */}
 
             <IonTabButton
               tab="participants"
@@ -133,19 +142,21 @@ const App: React.FC = () => {
                 icon={faListNumeric}
                 className={styles.tabIcon}
               />
-
-              <IonLabel className={styles.tabLabel}>Participantes</IonLabel>
+              <IonLabel className={styles.tabLabel}>Most Wanted</IonLabel>
+            </IonTabButton>
+            <IonTabButton
+              tab="profile"
+              href="/profile"
+              className={styles.tabButton}
+            >
+              <FontAwesomeIcon icon={faUser} className={styles.tabIcon} />
+              <IonLabel className={styles.tabLabel}>Perfil</IonLabel>
             </IonTabButton>
 
-            {/* <IonTabButton tab="home" href="/home" className={styles.tabButton}>
-            <FontAwesomeIcon icon={faFireAlt} className={styles.tabIcon} />
-            <IonLabel className={styles.tabLabel}>Evento</IonLabel>
-          </IonTabButton> */}
-
-            <IonTabButton tab="map" href="/map" className={styles.tabButton}>
+            {/* <IonTabButton tab="map" href="/map" className={styles.tabButton}>
               <FontAwesomeIcon icon={faMap} className={styles.tabIcon} />
               <IonLabel className={styles.tabLabel}>Mapa</IonLabel>
-            </IonTabButton>
+            </IonTabButton> */}
           </IonTabBar>
         </IonTabs>
       </IonReactRouter>

@@ -39,35 +39,27 @@ export type SpecsInfo = {
   aspiration: Aspiration;
 };
 
+export type CarEvent = {
+  ranking: number | null;
+  type: keyof CarInfoEvents;
+  stand?: string;
+  record?: number;
+  time?: number;
+  speed?: number;
+  amount?: number;
+};
+
 export type CarInfoEvents = {
-  exhibition?: {
-    ranking: number | null;
-    stand: string;
-  };
-  pops?: {
-    ranking: number | null;
-  };
-  limbo?: {
-    ranking: number | null;
-    record: number | null;
-  };
-  slalom?: {
-    ranking: number | null;
-    record: number | null;
-  };
-  eightMile?: {
-    time: number | null;
-    speed: number | null;
-    ranking: number | null;
-  };
-  donuts?: {
-    time: number | null;
-    amount: number | null;
-    ranking: number | null;
-  };
+  exhibition?: CarEvent;
+  pops?: CarEvent;
+  limbo?: CarEvent;
+  slalom?: CarEvent;
+  eightMile?: CarEvent;
+  donuts?: CarEvent;
 };
 
 export type CarInfo = {
+  uid: string;
   alias: string;
   gallery: string[];
   likes?: number | null;
