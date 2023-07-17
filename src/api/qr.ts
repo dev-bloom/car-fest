@@ -13,8 +13,7 @@ export const {
 
 export const getEmptyQRList = () => defaultGet<QR[]>(parseEndpoint(`empty`));
 
-export const generateEmptyQRs = () =>
-  defaultPost<QR[]>(parseEndpoint(`/batch`));
+export const generateEmptyQRs = () => defaultPost<QR[]>(parseEndpoint(`batch`));
 
 export const assignQR = (QRId: string, carId: string, uid: string) =>
   defaultPatch<QR & Pick<CarInfo, "uid">>(parseEndpoint(QRId), {
@@ -24,4 +23,4 @@ export const assignQR = (QRId: string, carId: string, uid: string) =>
   });
 
 export const getQRForCar = (carId: string) =>
-  defaultGet<QR>(parseEndpoint(`/car/${carId}`));
+  defaultGet<QR>(parseEndpoint(`car/${carId}`));
