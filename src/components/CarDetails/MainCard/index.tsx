@@ -15,10 +15,17 @@ import {
   IonItemGroup,
   IonItem,
   IonToggle,
+  IonButtons,
 } from "@ionic/react";
 import cn from "classnames";
-import { heart, logoInstagram, logoTiktok, logoYoutube } from "ionicons/icons";
-import { FC, useLayoutEffect, useState } from "react";
+import {
+  heart,
+  logoInstagram,
+  logoTiktok,
+  logoYoutube,
+  qrCode,
+} from "ionicons/icons";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import { EffectCoverflow, Pagination, Zoom } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
@@ -27,7 +34,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/zoom";
 import styles from "./style.module.scss";
-import { CarInfo } from "../../../types";
+import { CarInfo, QR } from "../../../types";
+import { getQR, getQRForCar } from "../../../api/qr";
 
 type MainCardProps = {
   activeSegment: string;
@@ -42,6 +50,17 @@ const MainCard: FC<MainCardProps> = ({
 }) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
+  const [qr, setQR] = useState<QR | null>(null);
+
+  const fetchQR = async () => {
+    if (!carInfo.id) return;
+    const responseQR: QR = await getQRForCar(carInfo.id);
+    setQR(responseQR);
+  };
+
+  useEffect(() => {
+    fetchQR();
+  }, [carInfo]);
 
   useLayoutEffect(() => {
     if (swiper) {
@@ -92,19 +111,36 @@ const MainCard: FC<MainCardProps> = ({
               {carInfo.specs?.model}
             </IonCardSubtitle>
           </div>
-          {/* <IonButton size="large" fill="clear" onClick={handleFavoriteClick}>
-            <div className={styles.likeButton}>
-              <IonIcon
-                className={cn(styles.likeIcon, {
-                  [styles.isLiked]: isLiked,
-                })}
-                icon={heart}
-              />
-              <IonText color="dark" className={styles.likeButtonText}>
-                {carInfo.likes}
-              </IonText>
-            </div>
-          </IonButton> */}
+          <IonButtons>
+            <IonButton
+              disabled
+              size="large"
+              fill="clear"
+              onClick={handleFavoriteClick}
+            >
+              <div className={styles.likeButton}>
+                <IonIcon
+                  className={cn(styles.likeIcon, {
+                    [styles.isLiked]: isLiked,
+                  })}
+                  icon={heart}
+                />
+                <IonText color="dark" className={styles.likeButtonText}>
+                  {carInfo.likes}
+                </IonText>
+              </div>
+            </IonButton>
+            <IonButton
+              disabled={!qr}
+              size="large"
+              fill="clear"
+              routerLink={`/badge/${qr?.id}`}
+            >
+              <div>
+                <IonIcon icon={qrCode} />
+              </div>
+            </IonButton>
+          </IonButtons>
         </div>
         <IonSegment
           color="dark"

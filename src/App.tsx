@@ -34,12 +34,7 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import Schedule from "./pages/Schedule";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendarDays,
-  faListNumeric,
-  faMap,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faListNumeric, faUser } from "@fortawesome/free-solid-svg-icons";
 import styles from "./App.module.scss";
 import "./_antd-overrides.scss";
 import Carlist from "./pages/CarList";
@@ -55,6 +50,7 @@ import PeopleListPage from "./pages/PeopleList";
 import CustomerDetailsPage from "./pages/CustomerDetails";
 import BadgePage from "./pages/BadgePage";
 import Profile from "./pages/Profile";
+import BadgesPage from "./pages/BadgesPage";
 
 setupIonicReact();
 
@@ -71,7 +67,10 @@ const App: React.FC = () => {
             <Route exact path="/profile">
               <Profile />
             </Route>
-            <Route exact path="/badge">
+            <Route exact path="/badges">
+              <BadgesPage />
+            </Route>
+            <Route exact path="/badge/:id">
               <BadgePage />
             </Route>
             <Route exact path="/car/:id">
@@ -117,10 +116,10 @@ const App: React.FC = () => {
               <Home />
             </Route>
             <Route exact path="/">
-              <Redirect to="/map" />
+              <Redirect to="/participants" />
             </Route>
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
+          <IonTabBar className="no-print" slot="bottom">
             {/* <IonTabButton
               tab="schedule"
               href="/schedule"

@@ -6,7 +6,7 @@ export const API_URL =
     ? "https://carfest-api.glitch.me"
     : "http://localhost:3000";
 
-const getEndpoint = (endpoint: string) => (fn?: string) =>
+export const getEndpoint = (endpoint: string) => (fn?: string) =>
   `${API_URL}/${endpoint}${fn ? `/${fn}` : ""}`;
 
 export const defaultGet = async <T>(endpoint: string): Promise<T> => {
@@ -14,13 +14,24 @@ export const defaultGet = async <T>(endpoint: string): Promise<T> => {
   return data;
 };
 
-export const defaultPost = async <T>(endpoint: string, body: T): Promise<T> => {
+export const defaultPost = async <T>(
+  endpoint: string,
+  body?: T
+): Promise<T> => {
   const { data } = await axios.post(endpoint, body);
   return data;
 };
 
 export const defaultPut = async <T>(endpoint: string, body: T): Promise<T> => {
   const { data } = await axios.put(endpoint, body);
+  return data;
+};
+
+export const defaultPatch = async <T>(
+  endpoint: string,
+  body: Partial<T>
+): Promise<T> => {
+  const { data } = await axios.patch(endpoint, body);
   return data;
 };
 
@@ -38,6 +49,7 @@ export const getCRUD = <T extends Entity>(endpoint: string) => {
     getAll: () => defaultGet<T[]>(parseEndpoint()),
     create: (body: T) => defaultPost<T>(parseEndpoint(), body),
     update: (body: T) => defaultPut<T>(parseEndpoint(body.id), body),
+    patch: (body: Partial<T>) => defaultPatch<T>(parseEndpoint(body.id), body),
     delete: (body: T) => defaultDelete<T>(parseEndpoint(body.id)),
     parseEndpoint,
   };

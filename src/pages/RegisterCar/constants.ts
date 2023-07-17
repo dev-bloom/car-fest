@@ -103,6 +103,7 @@ export const carInfoChildrenConstraints: Record<keyof CarInfoReferences, any> =
   };
 
 export const emptyCarInfo: CarInfo = {
+  uid: "12312312",
   alias: "",
   gallery: [],
   events: [],

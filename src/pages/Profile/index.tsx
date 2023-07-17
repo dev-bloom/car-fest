@@ -1,5 +1,6 @@
 import {
   IonButton,
+  IonCheckbox,
   IonContent,
   IonGrid,
   IonHeader,
@@ -16,7 +17,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
 import {
   signInWithEmailAndPassword,
   UserCredential,
@@ -26,12 +27,26 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import { add } from "ionicons/icons";
+import { add, checkmark } from "ionicons/icons";
 import { CarInfo } from "../../types";
-import { mockCar } from "../../constants/mocks";
-import { getCars, getCarsByUser } from "../../api/cars";
+import { getCarsByUser } from "../../api/cars";
+import { useHistory, useLocation } from "react-router";
+import { assignQR, patchQR } from "../../api/qr";
+
+const getCarName = (car: CarInfo) => {
+  if (car.alias) {
+    return car.alias;
+  }
+  return `${car.specs.make} ${car.specs.model} ${car.specs.modelYear}`;
+};
 
 const Profile = () => {
+  const { push } = useHistory();
+  const { search } = useLocation();
+  const query = useMemo(() => new URLSearchParams(search), [search]);
+  const qrToAssign = query.get("qr");
+  const isAssigningQR = !!qrToAssign;
+  const [selectedCar, setSelectedCar] = useState<CarInfo | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const provider = new GoogleAuthProvider();
@@ -61,6 +76,19 @@ const Profile = () => {
     }
   };
 
+  const logOut = async () => {
+    await auth.signOut();
+    setUser(null);
+  };
+
+  const handleSelectedCar = (car: CarInfo) => {
+    if (selectedCar?.id === car.id) {
+      setSelectedCar(null);
+      return;
+    }
+    setSelectedCar(car);
+  };
+
   const handleSignIn = async () => {
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(
@@ -86,6 +114,14 @@ const Profile = () => {
       }
       console.error(error);
     }
+  };
+
+  const handleAssignQR = async () => {
+    if (!qrToAssign || !selectedCar?.id) {
+      return;
+    }
+    await assignQR(qrToAssign, selectedCar.id, user.uid);
+    push(`/profile`);
   };
 
   const handleSignInWithGoogle = async () => {
@@ -116,28 +152,71 @@ const Profile = () => {
         <IonHeader>
           <IonToolbar>
             <IonTitle>Perfil - {user.displayName || user.email}</IonTitle>
+            <IonButton
+              className="ion-margin-end"
+              fill="outline"
+              size="small"
+              color="dark"
+              slot="end"
+              onClick={logOut}
+            >
+              Cerrar sesión
+            </IonButton>
           </IonToolbar>
         </IonHeader>
         <IonContent>
           <IonList>
             <IonItemGroup>
+              <IonButton routerLink="/register-car" color="dark" expand="full">
+                Agregar Vehículo
+                <IonIcon icon={add}></IonIcon>
+              </IonButton>
               <IonItemDivider>
                 <IonLabel>Vehículos registrados</IonLabel>
               </IonItemDivider>
-              {cars.map((car) => (
-                <IonItem key={car.id} detail routerLink={`/car/${car.id}`}>
-                  <div>
-                    <IonLabel>
-                      {car.specs.make} {car.specs.model} {car.specs.modelYear}
-                    </IonLabel>
-                    <IonNote>{car.alias}</IonNote>
-                  </div>
-                </IonItem>
-              ))}
-              <IonButton routerLink="/register-car" color="dark" expand="full">
-                Registrar Vehículo
-                <IonIcon icon={add}></IonIcon>
-              </IonButton>
+              {cars.map((car) =>
+                isAssigningQR ? (
+                  <IonItem key={car.id}>
+                    <div>
+                      <IonLabel>
+                        {car.specs.make} {car.specs.model} {car.specs.modelYear}
+                      </IonLabel>
+                      <IonNote>{car.alias}</IonNote>
+                    </div>
+                    <IonCheckbox
+                      onIonChange={() => handleSelectedCar(car)}
+                      slot="end"
+                      checked={selectedCar?.id === car.id}
+                    ></IonCheckbox>
+                  </IonItem>
+                ) : (
+                  <IonItem key={car.id} detail routerLink={`/car/${car.id}`}>
+                    <div>
+                      <IonLabel>
+                        {car.specs.make} {car.specs.model} {car.specs.modelYear}
+                      </IonLabel>
+                      <IonNote>{car.alias}</IonNote>
+                    </div>
+                  </IonItem>
+                )
+              )}
+              {isAssigningQR && (
+                <IonButton
+                  color="success"
+                  expand="full"
+                  disabled={!selectedCar}
+                  onClick={handleAssignQR}
+                >
+                  Registrar QR
+                  {selectedCar && ` a ${getCarName(selectedCar)}`}
+                  <IonIcon icon={checkmark}></IonIcon>
+                </IonButton>
+              )}
+              {isAssigningQR && !selectedCar && (
+                <IonNote color="warning" className="ion-margin-start">
+                  Selecciona un vehículo para asignar QR
+                </IonNote>
+              )}
             </IonItemGroup>
           </IonList>
         </IonContent>

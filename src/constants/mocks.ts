@@ -4,26 +4,32 @@ export const mockImage = "/mockImage.jpg";
 
 export const mockCarEvents: CarInfoEvents = {
   exhibition: {
+    type: "exhibition",
     ranking: 1,
     stand: "1",
   },
   pops: {
+    type: "pops",
     ranking: 1,
   },
   limbo: {
+    type: "limbo",
     ranking: 1,
     record: 1,
   },
   slalom: {
+    type: "slalom",
     ranking: 1,
     record: 1,
   },
   eightMile: {
+    type: "eightMile",
     time: 11.7,
     speed: 200,
     ranking: 1,
   },
   donuts: {
+    type: "donuts",
     time: 45,
     amount: 12,
     ranking: 1,
@@ -31,6 +37,7 @@ export const mockCarEvents: CarInfoEvents = {
 };
 
 export const mockCar: CarInfo = {
+  uid: "11232131",
   id: "1",
   alias: "Obscure",
   gallery: [mockImage, mockImage, mockImage],

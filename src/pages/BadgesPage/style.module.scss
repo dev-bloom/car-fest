@@ -1,0 +1,25 @@
+.boxGradient {
+  display: flex;
+  height: 300px;
+  margin: 0 10px;
+  position: relative;
+  width: 300px;
+  z-index: 0;
+  overflow: hidden;
+  fill: url(#gradient);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.badge {
+  width: calc(20vw - 5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
